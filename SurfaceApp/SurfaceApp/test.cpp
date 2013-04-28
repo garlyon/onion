@@ -1,20 +1,15 @@
 #include "stdafx.h"
 
+#include "..\QuadEdge\Test.h"
+
 namespace Test_NS
 {
-  class A
+  bool myTestFunc()
   {
-    A* ptr;
+    QuadEdge_NS::test();
 
-  public:
-
-    A() : ptr( this )
-    {
-    }
-  };
-
-  void f()
-  {
-    A a;
+    return true;
   }
+
+  bool val = myTestFunc();
 }

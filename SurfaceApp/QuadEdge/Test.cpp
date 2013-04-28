@@ -1,10 +1,15 @@
+#include "Test.h"
+
 #include "Ring.h"
+#include "Quad.h"
+#include "Topology.h"
+#include "Shape.h"
 
-void test()
+void QuadEdge_NS::test()
 {
-  using namespace QuadEdge_NS;
+  //using namespace QuadEdge_NS;
   
-  Ring<O>* ro = nullptr;
+  Quad a, b;
 
-  ro->rot()->rot();
+  splice( a.o(), b.o() );
 }

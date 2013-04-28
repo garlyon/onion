@@ -13,6 +13,18 @@ namespace QuadEdge_NS
 
   public:
 
-    Quad() : d_oVert( &d_oVert ), d_dVert( &d_dVert ), d_lFace( &d_rFace.rot().rot() ), d_rFace( &d_lFace.rot().rot() ) {}
+    Quad() { d_lFace.swap( d_rFace.rot().rot() ); }
+
+  public:
+
+    const ORing& o() const { return d_oVert; }
+    const RRing& r() const { return d_rFace; }
+    const DRing& d() const { return d_dVert; }
+    const LRing& l() const { return d_lFace; }
+
+    ORing& o() { return d_oVert; }
+    RRing& r() { return d_rFace; }
+    DRing& d() { return d_dVert; }
+    LRing& l() { return d_lFace; }
   };
 }

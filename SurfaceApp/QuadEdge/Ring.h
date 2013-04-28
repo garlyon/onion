@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 namespace QuadEdge_NS
 {
   enum RingType
@@ -20,12 +22,18 @@ namespace QuadEdge_NS
 
   public:
 
-    typedef Ring<N> Next;
+    Ring() : d_next( this )             {}
 
-    explicit Ring( Ring* i_next ) : d_next( i_next ) {}
+    typedef     Ring<N>                 Next;
 
-    Ring& next() { return *d_next; }
-    Next& rot()  { return *reinterpret_cast<Next*>( this + R ); }
+    const Ring& next()            const { return *d_next; }
+    const Next& rot()             const { return *reinterpret_cast<const Next*>( this + R ); }
+
+    Ring&       next()                  { return *d_next; }
+    Next&       rot()                   { return *reinterpret_cast<Next*>( this + R ); }
+
+    //  swap the links on next element in a ring
+    void        swap( Ring& rhs )       { std::swap( d_next, rhs.d_next ); }
   };
 
   typedef Ring<O> ORing;

@@ -4,5 +4,10 @@
 
 namespace QuadEdge_NS
 {
-  void splice( Quad& i_left, Quad& i_right );
+  template <int T>
+  void splice( Ring<T>& a, Ring<T>& b )
+  {
+    a.next().rot().swap( b.next().rot() );
+    a.swap( b );
+  }
 }
