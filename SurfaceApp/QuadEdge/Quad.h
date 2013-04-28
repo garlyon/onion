@@ -1,25 +1,18 @@
 #pragma once
 
-#include "Edge.h"
+#include "Ring.h"
 
 namespace QuadEdge_NS
 {
   class Quad
   {
-    Edge d_oVert;
-    Edge d_rFace;
-    Edge d_dVert;
-    Edge d_lFace;
-
-  private:
-
-    Quad( Edge i_oVert, Edge i_rFace, Edge i_dVert, Edge i_lFace );
+    ORing d_oVert;
+    RRing d_rFace;
+    DRing d_dVert;
+    LRing d_lFace;
 
   public:
 
-    Quad();
-
-    Quad& cRot(); //  rotate around edge center
-    Quad& oRot(); //  rotate around origin vertex
+    Quad() : d_oVert( &d_oVert ), d_dVert( &d_dVert ), d_lFace( &d_rFace.rot().rot() ), d_rFace( &d_lFace.rot().rot() ) {}
   };
 }

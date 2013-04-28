@@ -77,15 +77,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Edge.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadEdgeAPI.h" />
+    <ClInclude Include="Ring.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Topology.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Quad.cpp" />
     <ClCompile Include="QuadEdgeAPI.cpp" />
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Topology.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
