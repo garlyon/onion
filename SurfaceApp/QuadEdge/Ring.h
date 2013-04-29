@@ -29,30 +29,35 @@ namespace QuadEdge_NS
 
   /////////////////////////////////////////////////////////////////////////////
 
+  enum RingType { O, R, D, L };
+
+  template <RingType T> class Ring;
+
+  template <RingType T> struct DualRingType;
+  template <> struct DualRingType<O> { typedef Ring<R> Dual; };
+  template <> struct DualRingType<R> { typedef Ring<D> Dual; };
+  template <> struct DualRingType<D> { typedef Ring<L> Dual; };
+  template <> struct DualRingType<L> { typedef Ring<O> Dual; };
+
   class Quad;
 
-  enum LinkType
-  {
-    O = 0,
-    R = 1,
-    D = 2,
-    L = 3
-  };
-
-  template <int T>
+  template <RingType T, typename Data>
   class Ring : public Link
   {
-    static const int N = ( T + 1 ) % 4;
+    Data* d_data; //  how to update the splitted part of the ring ater the splice in one step ?
 
   public:
 
-    typedef Ring<N> Dual;
+    typedef typename DualRingType<T>::Dual Dual;
 
     Ring& next() { return static_cast< Ring& >( Link::next() ); }
 
     Dual& rot()  { return quad(); }
 
     Quad& quad();
+
+    template <RingType D>
+    void swap( Ring<D, Data>& rhs ) { std::swap(  ) }
   };
 
   typedef Ring<O> ORing;
@@ -92,12 +97,12 @@ namespace QuadEdge_NS
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <int T>
+  template <RingType T>
   inline Quad& Ring<T>::quad() { return static_cast<Quad&>( *this ); }
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <int A, int B>
+  template <RingType A, RingType B>
   void splice( Ring<A>& a, Ring<B>& b )
   {
     swap( a.next().rot(), b.next().rot() );
