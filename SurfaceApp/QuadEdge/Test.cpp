@@ -6,15 +6,15 @@ void QuadEdge_NS::test()
 {
   Shape s;
   
-  Quad& a = s.create();
-  Quad& b = s.create();
-  Quad& c = s.create();
+  ORing& a = s.create();
+  ORing& b = s.create();
+  ORing& c = s.create();
 
-  splice( a.d(), b.o() );
-  splice( b.d(), c.o() );
-  splice( c.d(), a.o() );
+  splice( a.rot().rot(), b );
+  splice( b.rot().rot(), c );
+  splice( c.rot().rot(), a );
 
-  Quad& d = s.create();
+  ORing& d = s.create();
 
-  splice( a.o(), d.d() );
+  splice( a, d );
 }
