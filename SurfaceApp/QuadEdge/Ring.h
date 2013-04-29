@@ -20,17 +20,24 @@ namespace QuadEdge_NS
     static const int N = ( T + 1 ) % 4;
     static const int R = N - T;
 
-  public:
+  protected:
 
     Ring() : d_next( this )             {}
+
+  private:
+    
+    Ring( const Ring& );
+    Ring& operator = ( const Ring& );
+
+  public:
 
     typedef     Ring<N>                 Next;
 
     const Ring& next()            const { return *d_next; }
-    const Next& rot()             const { return *reinterpret_cast<const Next*>( this + R ); }
+    const Next& rot()             const;
 
     Ring&       next()                  { return *d_next; }
-    Next&       rot()                   { return *reinterpret_cast<Next*>( this + R ); }
+    Next&       rot();
 
     //  swap the links on next element in a ring
     void        swap( Ring& rhs )       { std::swap( d_next, rhs.d_next ); }
@@ -40,4 +47,42 @@ namespace QuadEdge_NS
   typedef Ring<R> RRing;
   typedef Ring<D> DRing;
   typedef Ring<L> LRing;
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  class Quad : public ORing, public RRing, public DRing, public LRing
+  {
+  public:
+
+    Quad() { l().swap( r().rot().rot() ); }
+
+  public:
+
+    const ORing& o() const { return *this; }
+    const RRing& r() const { return *this; }
+    const DRing& d() const { return *this; }
+    const LRing& l() const { return *this; }
+
+    ORing& o() { return *this; }
+    RRing& r() { return *this; }
+    DRing& d() { return *this; }
+    LRing& l() { return *this; }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  template <int T>
+  inline typename const Ring<T>::Next& Ring<T>::rot() const { return static_cast<const Quad&>( *this ); }
+
+  template <int T>
+  inline typename       Ring<T>::Next& Ring<T>::rot()       { return static_cast<Quad&>( *this ); }
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  template <int T>
+  void splice( Ring<T>& a, Ring<T>& b )
+  {
+    a.next().rot().swap( b.next().rot() );
+    a.swap( b );
+  }
 }
