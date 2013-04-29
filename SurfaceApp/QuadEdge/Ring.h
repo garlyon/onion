@@ -1,10 +1,37 @@
 #pragma once
 
 #include <algorithm>
+#include <memory>
 
 namespace QuadEdge_NS
 {
-  enum RingType
+  class Link
+  {
+    Link* d_next;
+
+  protected:
+
+    Link() : d_next( this ) {}
+
+  private:
+
+    Link( const Link& );
+    Link& operator = ( const Link& );
+
+  public:
+
+    Link& next() { return *d_next; }
+
+    void swap( Link& rhs ) { std::swap( d_next, rhs.d_next ); }
+  };
+
+  inline void swap( Link& a, Link& b ) { a.swap( b ); }
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  class Quad;
+
+  enum LinkType
   {
     O = 0,
     R = 1,
@@ -13,34 +40,19 @@ namespace QuadEdge_NS
   };
 
   template <int T>
-  class Ring
+  class Ring : public Link
   {
-    Ring* d_next;
-
     static const int N = ( T + 1 ) % 4;
-    static const int R = N - T;
-
-  protected:
-
-    Ring() : d_next( this )             {}
-
-  private:
-    
-    Ring( const Ring& );
-    Ring& operator = ( const Ring& );
 
   public:
 
-    typedef     Ring<N>                 Next;
+    typedef Ring<N> Dual;
 
-    const Ring& next()            const { return *d_next; }
-    const Next& rot()             const;
+    Ring& next() { return static_cast< Ring& >( Link::next() ); }
 
-    Ring&       next()                  { return *d_next; }
-    Next&       rot();
+    Dual& rot()  { return quad(); }
 
-    //  swap the links on next element in a ring
-    void        swap( Ring& rhs )       { std::swap( d_next, rhs.d_next ); }
+    Quad& quad();
   };
 
   typedef Ring<O> ORing;
@@ -52,9 +64,18 @@ namespace QuadEdge_NS
 
   class Quad : public ORing, public RRing, public DRing, public LRing
   {
+  protected:
+
+    Quad() { using QuadEdge_NS::swap; swap( l(), r() ); }
+
+  private:
+    
+    Quad( const Quad& );
+    Quad& operator = ( const Quad& );
+
   public:
 
-    Quad() { l().swap( r().rot().rot() ); }
+    static std::shared_ptr<Quad> create() { return std::shared_ptr<Quad>( new Quad ); }
 
   public:
 
@@ -72,17 +93,14 @@ namespace QuadEdge_NS
   /////////////////////////////////////////////////////////////////////////////
 
   template <int T>
-  inline typename const Ring<T>::Next& Ring<T>::rot() const { return static_cast<const Quad&>( *this ); }
-
-  template <int T>
-  inline typename       Ring<T>::Next& Ring<T>::rot()       { return static_cast<Quad&>( *this ); }
+  inline Quad& Ring<T>::quad() { return static_cast<Quad&>( *this ); }
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <int T>
-  void splice( Ring<T>& a, Ring<T>& b )
+  template <int A, int B>
+  void splice( Ring<A>& a, Ring<B>& b )
   {
-    a.next().rot().swap( b.next().rot() );
-    a.swap( b );
+    swap( a.next().rot(), b.next().rot() );
+    swap( a, b );
   }
 }

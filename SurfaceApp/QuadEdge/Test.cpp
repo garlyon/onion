@@ -1,15 +1,20 @@
 #include "Test.h"
 
-#include "Ring.h"
-//#include "Shape.h"
+#include "Shape.h"
 
 void QuadEdge_NS::test()
 {
-  //using namespace QuadEdge_NS;
+  Shape s;
   
-  Quad a, b, c;
+  Quad& a = s.create();
+  Quad& b = s.create();
+  Quad& c = s.create();
 
-  splice( a.d().rot().rot(), b.o() );
-  splice( b.d().rot().rot(), c.o() );
-  splice( c.d().rot().rot(), a.o() );
+  splice( a.d(), b.o() );
+  splice( b.d(), c.o() );
+  splice( c.d(), a.o() );
+
+  Quad& d = s.create();
+
+  splice( a.o(), d.d() );
 }
