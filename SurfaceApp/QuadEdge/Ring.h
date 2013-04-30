@@ -45,7 +45,7 @@ namespace QuadEdge_NS
 
     typedef typename DualRingType<T>::Dual Dual;
 
-    Ring& next() { return static_cast< Ring& >( Link::next() ); }
+    Ring& next() { return static_cast< Ring& >( Link::next() ); } //  this operation breaks a concept
     Dual& rot();
   };
 
