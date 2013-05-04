@@ -4,93 +4,62 @@
 
 namespace QuadEdge_NS
 {
-  class Link
+  class Ring
   {
-    Link* d_next;
+    Ring* d_next;
+    void* d_data;
 
-  protected:
+    Ring();
+    Ring( const Ring& );
+    Ring& operator = ( const Ring& );
 
-    Link() : d_next( this ) {}
+  public:
+
+    explicit Ring( Ring* i_next ) : d_next( i_next ), d_data( nullptr ) {}
+
+    Ring& next() { return *d_next; }
+    Ring& rot() { return *( this + rotId() ); }
+
+    void* data() { return d_data; }
+    
+    void swap( Ring& rhs ) { std::swap( d_next, rhs.d_next ); }
+    void data( void* i_data ) { Ring* p = this; do { p->d_data = i_data; } while( ( p = p->d_next ) != this ); }
 
   private:
 
-    Link( const Link& );
-    Link& operator = ( const Link& );
+    ptrdiff_t id( const Ring* i_head = nullptr ) const { return this - i_head; }
+    ptrdiff_t rotId() const { return pos( id() + 1 ) - pos( id() ); }
 
-  public:
-
-    Link& next() { return *d_next; }
-
-    void swap( Link& rhs ) { std::swap( d_next, rhs.d_next ); }
+    static ptrdiff_t pos( ptrdiff_t i_id ) { return i_id & 3; }
   };
 
-  inline void swap( Link& a, Link& b ) { a.swap( b ); }
+  inline void swap( Ring& a, Ring& b ) { a.swap( b ); }
 
   /////////////////////////////////////////////////////////////////////////////
 
-  enum RingType { O, R, D, L };
-
-  template <RingType T> class Ring;
-
-  template <RingType T> struct DualRingType;
-  template <> struct DualRingType<O> { typedef Ring<R> Dual; };
-  template <> struct DualRingType<R> { typedef Ring<D> Dual; };
-  template <> struct DualRingType<D> { typedef Ring<L> Dual; };
-  template <> struct DualRingType<L> { typedef Ring<O> Dual; };
-
-  template <RingType T>
-  class Ring : public Link
+  class Quad
   {
+    Ring o, r, d, l;
+
+    Quad( const Quad& );
+    Quad& operator = ( const Quad& );
+    
   public:
 
-    typedef typename DualRingType<T>::Dual Dual;
-
-    Ring& next() { return static_cast< Ring& >( Link::next() ); } //  this operation breaks a concept
-    Dual& rot();
-  };
-
-  typedef Ring<O> ORing;
-  typedef Ring<R> RRing;
-  typedef Ring<D> DRing;
-  typedef Ring<L> LRing;
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  class Quad : private ORing, private RRing, private DRing, private LRing
-  {
-  protected:
-
-    Quad() { QuadEdge_NS::swap( (LRing&)*this, (RRing&)*this ); }
-
-  public:
-
-    static Quad* create() { return new Quad; }
-
-    ORing& edge() { return *this; }
-
-  public:
-
-    template<RingType T>
-    static typename Ring<T>::Dual& rot( Ring<T>& ring ) { return static_cast<Quad&>( ring ); }
+    Quad() : o( &o ), d( &d ), r( &l ), l( &r ) {}
   };
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <RingType T> inline typename Ring<T>::Dual& Ring<T>::rot() { return Quad::rot( *this ); }
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  template <RingType T>
-  void splice( Ring<T>& a, Ring<T>& b )
+  inline void splice( Ring& a, Ring& b )
   {
-    swap( a.next().rot(), b.next().rot() );
+    Ring& c = a.next().rot();
+    Ring& d = b.next().rot();
+
     swap( a, b );
-  }
+    b.data( a.data() == b.data() ? nullptr : a.data() );
 
-  template <RingType T>
-  void splice( Ring<T>& a, typename Ring<T>::Dual::Dual& b )
-  {
-    swap( a.next().rot(), b.next().rot() );
-    swap( a, b );
+    swap( c, d );
+    d.data( c.data() == d.data() ? nullptr : c.data() );
   }
 }
