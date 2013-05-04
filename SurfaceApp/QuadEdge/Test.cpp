@@ -1,24 +1,33 @@
 #include "Test.h"
 #include "Ring.h"
-//#include "Shape.h"
+#include "Shape.h"
 
 void QuadEdge_NS::test()
-{  
-  Ring a = s.create();
-  Ring b = s.create();
-  Ring c = s.create();
+{
+  struct VertData
+  {
+    int vid;
+  };
 
-  splice( a.rot().rot(), b );
-  splice( b.rot().rot(), c );
-  splice( c.rot().rot(), a );
+  struct FaceData
+  {
+    int fid;
+  };
 
-  ORing& d = s.create();
+  Shape<VertData, FaceData> s;
 
-  splice( a, d );
+  auto& a = s.create();
+  auto& b = s.create();
+  auto& c = s.create();
 
-  std::vector<size_t> v;
-  v.push_back( sizeof(Quad) );
-  v.push_back( sizeof(Quad*) );
-  v.push_back( sizeof(RRing) );
-  v.push_back( sizeof(RRing*) );
+  splice( a.o().dual().dual(), b.o() );
+  splice( b.o().dual().dual(), c.o() );
+  splice( c.o().dual().dual(), a.o() );
+
+  s.create( a.o() ).vid = 0;
+  s.create( b.o() ).vid = 1;
+  s.create( c.o() ).vid = 2;
+
+  s.create( a.l() ).fid = -1;
+  s.create( a.r() ).fid = -2;
 }
