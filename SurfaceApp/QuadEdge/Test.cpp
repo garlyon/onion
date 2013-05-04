@@ -1,6 +1,7 @@
 #include "Test.h"
 #include "Ring.h"
 #include "Shape.h"
+#include "Edge.h"
 
 void QuadEdge_NS::test()
 {
@@ -28,6 +29,20 @@ void QuadEdge_NS::test()
   s.create( b.o() ).vid = 1;
   s.create( c.o() ).vid = 2;
 
-  s.create( a.l() ).fid = -1;
-  s.create( a.r() ).fid = -2;
+  s.create( a.l() ).fid = 1001;
+  s.create( a.r() ).fid = 1002;
+
+  Edge<VertData, FaceData> e0( a.o() );
+  ConstEdge<FaceData, VertData> e1( a.l() );
+
+  e0.lNext().o().vid++;
+  e0.rot().o().fid++;
+  e0.dPrev().rot().d().fid++;
+
+  e1.d();
+
+  auto l41 = e1.d().fid;
+  auto l42 = e1.rot().d().vid;
+
+  ConstEdge<VertData, FaceData> e2( e0 );
 }
