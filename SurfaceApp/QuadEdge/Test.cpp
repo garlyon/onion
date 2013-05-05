@@ -1,48 +1,48 @@
 #include "Test.h"
 #include "Ring.h"
-#include "Shape.h"
 #include "Edge.h"
+//#include "Shape.h"
+#include <string>
 
 void QuadEdge_NS::test()
 {
   struct VertData
   {
-    int vid;
+    std::string vid;
   };
 
   struct FaceData
   {
-    int fid;
+    std::string fid;
   };
 
-  Shape<VertData, FaceData> s;
+  typedef Quad<VertData, FaceData> Q;
+  typedef Edge<VertData, FaceData> E;
 
-  auto& a = s.create();
-  auto& b = s.create();
-  auto& c = s.create();
+  std::shared_ptr<Q> a( new Q );
+  std::shared_ptr<Q> b( new Q );
+  std::shared_ptr<Q> c( new Q );
 
-  splice( a.o().dual().dual(), b.o() );
-  splice( b.o().dual().dual(), c.o() );
-  splice( c.o().dual().dual(), a.o() );
+  E ea( a->o() );
+  E eb( b->o() );
+  E ec( c->o() );
 
-  s.create( a.o() ).vid = 0;
-  s.create( b.o() ).vid = 1;
-  s.create( c.o() ).vid = 2;
+  ea.o()->vid = "A";
+  eb.o()->vid = "B";
+  ec.o()->vid = "C";
 
-  s.create( a.l() ).fid = 1001;
-  s.create( a.r() ).fid = 1002;
+  ea.l()->fid = "In";
+  ea.r()->fid = "Out";
 
-  Edge<VertData, FaceData> e0( a.o() );
-  ConstEdge<FaceData, VertData> e1( a.l() );
+  splice( eb, ea.sym() ); //  reset ea.d and ea.r
+  splice( ec, eb.sym() ); //  reset eb.d and eb.r
+  splice( ea, ec.sym() ); //  reset ec.d and ec.r
 
-  e0.lNext().o().vid++;
-  e0.rot().o().fid++;
-  e0.dPrev().rot().d().fid++;
+  std::string s;
 
-  e1.d();
-
-  auto l41 = e1.d().fid;
-  auto l42 = e1.rot().d().vid;
-
-  ConstEdge<VertData, FaceData> e2( e0 );
+  s = ea.o()->vid;
+  s = eb.o()->vid;
+  s = ec.o()->vid;
+  s = ea.l()->fid;
+  s = ea.r()->fid;
 }

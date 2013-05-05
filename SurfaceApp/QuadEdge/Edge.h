@@ -9,42 +9,37 @@ namespace QuadEdge_NS
   {
   public:
 
-    typedef typename T::E   E;  //  Edge
-    typedef typename T::D   D;  //  Dual Edge
-    typedef typename T::R   R;  //  Ring
-    typedef typename T::V   V;  //  Vertex Data
-    typedef typename T::F   F;  //  Face Data
+    typedef typename T::PrimEdge    PrimEdge;
+    typedef typename T::DualEdge    DualEdge;
+    typedef typename T::PrimRing    PrimRing;
+    typedef typename T::DualRing    DualRing;
 
-    RingRef( R& i_ring ) : d_ring( i_ring ) {}
+    RingRef( PrimRing& i_ring ) : d_ring( i_ring ) {}
 
-    E oNext() const { return d_ring.next(); }
-    E oPrev() const { return d_ring.dual().next().dual(); }
+    PrimEdge oNext() const { return d_ring.next(); }
+    PrimEdge oPrev() const { return d_ring.dual().next().dual(); }
 
-    E dNext() const { return d_ring.dual().dual().next().dual().dual(); }
-    E dPrev() const { return d_ring.dual().dual().dual().next().dual().dual().dual(); }
+    PrimEdge dNext() const { return d_ring.dual().dual().next().dual().dual(); }
+    PrimEdge dPrev() const { return d_ring.dual().dual().dual().next().dual().dual().dual(); }
 
-    E lNext() const { return d_ring.dual().dual().dual().next().dual(); }
-    E lPrev() const { return d_ring.next().dual().dual(); }
+    PrimEdge lNext() const { return d_ring.dual().dual().dual().next().dual(); }
+    PrimEdge lPrev() const { return d_ring.next().dual().dual(); }
 
-    E rNext() const { return d_ring.dual().next().dual().dual().dual(); }
-    E rPrev() const { return d_ring.dual().dual().next(); }
+    PrimEdge rNext() const { return d_ring.dual().next().dual().dual().dual(); }
+    PrimEdge rPrev() const { return d_ring.dual().dual().next(); }
 
-    D rot()   const { return d_ring.dual(); }
-    E sym()   const { return d_ring.dual().dual(); }
+    DualEdge rot()   const { return d_ring.dual(); }
+    PrimEdge sym()   const { return d_ring.dual().dual(); }
 
-    const V& o() const { return *d_ring.data(); }
-    const F& r() const { return *d_ring.dual().data(); }
-    const V& d() const { return *d_ring.dual().dual().data(); }
-    const F& l() const { return *d_ring.dual().dual().dual().data(); }
+    const PrimRing& o() const { return d_ring; }
+    const DualRing& r() const { return d_ring.dual(); }
+    const PrimRing& d() const { return d_ring.dual().dual(); }
+    const DualRing& l() const { return d_ring.dual().dual().dual(); }
     
-    V& o() { return *d_ring.data(); }
-    F& r() { return *d_ring.dual().data(); }
-    V& d() { return *d_ring.dual().dual().data(); }
-    F& l() { return *d_ring.dual().dual().dual().data(); }
-
-  protected:
-
-    const R& ring() const { return d_ring; }
+    PrimRing& o() { return d_ring; }
+    DualRing& r() { return d_ring.dual(); }
+    PrimRing& d() { return d_ring.dual().dual(); }
+    DualRing& l() { return d_ring.dual().dual().dual(); }
 
   private:
 
@@ -53,7 +48,7 @@ namespace QuadEdge_NS
 
   private:
 
-    R& d_ring;
+    PrimRing& d_ring;
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -64,11 +59,10 @@ namespace QuadEdge_NS
   template <typename V, typename F>
   struct ConstEdgeTraits
   {
-    typedef ConstEdge<V, F>   E;
-    typedef ConstEdge<F, V>   D;
-    typedef const Ring<V, F>  R;
-    typedef const V           V;
-    typedef const F           F;
+    typedef ConstEdge<V, F>   PrimEdge;
+    typedef ConstEdge<F, V>   DualEdge;
+    typedef const Ring<V, F>  PrimRing;
+    typedef const Ring<F, V>  DualRing;
   };
 
   template <typename V, typename F>
@@ -76,7 +70,7 @@ namespace QuadEdge_NS
   {
   public:
     
-    ConstEdge( R& i_ring ) : RingRef( i_ring ) {}
+    ConstEdge( const Ring<V, F>& i_ring ) : RingRef( i_ring ) {}
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -87,11 +81,10 @@ namespace QuadEdge_NS
   template <typename V, typename F>
   struct EdgeTraits
   {
-    typedef Edge<V, F>  E;
-    typedef Edge<F, V>  D;
-    typedef Ring<V, F>  R;
-    typedef V           V;
-    typedef F           F;
+    typedef Edge<V, F>  PrimEdge;
+    typedef Edge<F, V>  DualEdge;
+    typedef Ring<V, F>  PrimRing;
+    typedef Ring<F, V>  DualRing;
   };
 
   template <typename V, typename F>
@@ -99,8 +92,22 @@ namespace QuadEdge_NS
   {
   public:
     
-    Edge( R& i_ring ) : RingRef( i_ring ) {}
+    Edge( Ring<V, F>& i_ring ) : RingRef( i_ring ) {}
 
-    operator ConstEdge<V, F> () const { return ring(); }
+    operator ConstEdge<V, F> () const { return o(); }
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  template <typename V, typename F>
+  void splice( Edge<V, F> a, Edge<V, F> b )
+  {
+    Ring<V, F>& pa = a.o();
+    Ring<V, F>& pb = b.o();
+    Ring<F, V>& da = pa.next().dual();
+    Ring<F, V>& db = pb.next().dual();
+
+    pa.fuse( pb );
+    da.fuse( db );
+  }
 }

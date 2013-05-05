@@ -2,15 +2,16 @@
 
 #include "Ring.h"
 #include <vector>
+#include <list>
 
 namespace QuadEdge_NS
 {
   template <typename V, typename F>
   class Shape
   {
-    std::vector<Quad<V, F>*> d_nodes;
-    std::vector<Ring<V, F>*> d_verts;
-    std::vector<Ring<F, V>*> d_faces;
+    std::vector<Quad<V, F>*>  d_nodes;
+    std::list<Ring<V, F>>     d_verts;
+    std::list<Ring<F, V>>     d_faces;
 
   public:
 
