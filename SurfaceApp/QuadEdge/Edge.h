@@ -53,54 +53,58 @@ namespace QuadEdge_NS
 
   /////////////////////////////////////////////////////////////////////////////
   
-  template <typename V, typename F>
+  template <typename T>
   class ConstEdge;
 
-  template <typename V, typename F>
+  template <typename T>
   struct ConstEdgeTraits
   {
-    typedef ConstEdge<V, F>   PrimEdge;
-    typedef ConstEdge<F, V>   DualEdge;
-    typedef const Ring<V, F>  PrimRing;
-    typedef const Ring<F, V>  DualRing;
+    typedef typename T::Prim      Prim;
+    typedef typename T::Dual      Dual;
+    typedef ConstEdge<Prim>       PrimEdge;
+    typedef ConstEdge<Dual>       DualEdge;
+    typedef const Ring<Prim>      PrimRing;
+    typedef const Ring<Dual>      DualRing;
   };
 
-  template <typename V, typename F>
-  class ConstEdge : public RingRef<ConstEdgeTraits<V, F>>
+  template <typename T>
+  class ConstEdge : public RingRef<ConstEdgeTraits<T>>
   {
   public:
     
-    ConstEdge( const Ring<V, F>& i_ring ) : RingRef( i_ring ) {}
+    ConstEdge( const Ring<T>& i_ring ) : RingRef( i_ring ) {}
   };
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <typename V, typename F>
+  template <typename T>
   class Edge;
 
-  template <typename V, typename F>
+  template <typename T>
   struct EdgeTraits
   {
-    typedef Edge<V, F>  PrimEdge;
-    typedef Edge<F, V>  DualEdge;
-    typedef Ring<V, F>  PrimRing;
-    typedef Ring<F, V>  DualRing;
+    typedef typename T::Prim      Prim;
+    typedef typename T::Dual      Dual;
+    typedef Edge<Prim>            PrimEdge;
+    typedef Edge<Dual>            DualEdge;
+    typedef Ring<Prim>            PrimRing;
+    typedef Ring<Dual>            DualRing;
   };
 
-  template <typename V, typename F>
-  class Edge : public RingRef<EdgeTraits<V, F>>
+  template <typename T>
+  class Edge : public RingRef<EdgeTraits<T>>
   {
   public:
     
-    Edge( Ring<V, F>& i_ring ) : RingRef( i_ring ) {}
+    Edge( Ring<T>& i_ring ) : RingRef( i_ring ) {}
 
-    operator ConstEdge<V, F> () const { return o(); }
+    operator ConstEdge<T> () const { return o(); }
   };
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <typename V, typename F>
-  void splice( Edge<V, F> a, Edge<V, F> b )
+  template <typename T>
+  void splice( Edge<T> a, Edge<T> b )
   {
     splice( a.o(), b.o() );
   }

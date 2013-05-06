@@ -5,15 +5,16 @@
 
 namespace QuadEdge_NS
 {
-  template <typename V, typename F>
-  class Ring : private std::shared_ptr<V>
+  template <typename T>
+  class Ring : private std::shared_ptr<typename T::Prim>
   {
-    typedef std::shared_ptr<V> shared_ptr;
+    typedef std::shared_ptr<typename T::Prim> shared_ptr;
 
   public:
 
-    typedef V                   Data;
-    typedef Ring<F, V>          Dual;
+    typedef typename T::Prim             Data;
+    typedef Ring<typename T::Prim>       Prim;
+    typedef Ring<typename T::Dual>       Dual;
 
     Ring( Ring& i_next, Dual& i_dual ) : d_next( &i_next ), d_dual( &i_dual ) {}
 
@@ -29,8 +30,8 @@ namespace QuadEdge_NS
     using shared_ptr::operator ->;
     using shared_ptr::operator *;
 
-    template <typename V, typename F> friend void splice( Ring<V, F>& a, Ring<V, F>& b );
-    template <typename V, typename F> friend class Quad;
+    template <typename T> friend void splice( Ring<T>& a, Ring<T>& b );
+    template <typename T> friend class Quad;
 
   private:
 
@@ -51,7 +52,7 @@ namespace QuadEdge_NS
     void data( shared_ptr i_data ) { Ring* p = this; do { *p = i_data; } while( ( p = p->d_next ) != this ); }
     
     //  create new data instance for decoupled ring
-    shared_ptr clone() const { return shared_ptr( new V ); }
+    shared_ptr clone() const { return shared_ptr( new Data ); }
 
   private:
 
@@ -61,8 +62,8 @@ namespace QuadEdge_NS
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <typename V, typename F>
-  void splice( Ring<V, F>& a, Ring<V, F>& b )
+  template <typename T>
+  void splice( Ring<T>& a, Ring<T>& b )
   {
     //  swap links in L edges ring
     a.next().dual().swap( b.next().dual() );
@@ -76,9 +77,12 @@ namespace QuadEdge_NS
 
   /////////////////////////////////////////////////////////////////////////////
 
-  template <typename V, typename F>
+  template <typename T>
   class Quad
   {
+    typedef typename T::Prim     V;
+    typedef typename T::Dual     F;
+
     Quad( const Quad& );
     Quad& operator = ( const Quad& );
 
@@ -95,8 +99,8 @@ namespace QuadEdge_NS
     
   public:
 
-    typedef Ring<V, F>  Prim;
-    typedef Ring<F, V>  Dual;
+    typedef Ring<V>     Prim;
+    typedef Ring<F>     Dual;
 
     static std::shared_ptr<Quad> create() { return std::shared_ptr<Quad>( new Quad ); }
 

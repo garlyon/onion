@@ -4,20 +4,31 @@
 //#include "Shape.h"
 #include <string>
 
+struct VertData;
+struct FaceData;
+
+struct VertData
+{
+  typedef VertData Prim;
+  typedef FaceData Dual;
+
+  std::string vid;
+};
+
+struct FaceData
+{
+  typedef FaceData Prim;
+  typedef VertData Dual;
+
+  std::string fid;
+};
+
 void QuadEdge_NS::test()
 {
-  struct VertData
-  {
-    std::string vid;
-  };
+  
 
-  struct FaceData
-  {
-    std::string fid;
-  };
-
-  typedef Quad<VertData, FaceData> Q;
-  typedef Edge<VertData, FaceData> E;
+  typedef Quad<VertData> Q;
+  typedef Edge<VertData> E;
 
   std::shared_ptr<Q> a = Q::create();
 
