@@ -19,7 +19,7 @@ void QuadEdge_NS::test()
   typedef Quad<VertData, FaceData> Q;
   typedef Edge<VertData, FaceData> E;
 
-  std::shared_ptr<Q> a( new Q );
+  std::shared_ptr<Q> a = Q::create();
 
   E e( a->o() );
 
@@ -38,6 +38,8 @@ void QuadEdge_NS::test()
   s = e.d()->vid;
   s = e.l()->fid;
   s = e.r()->fid;
+
+  auto z = *e.o();
 
   splice( e, e.sym() );
 }

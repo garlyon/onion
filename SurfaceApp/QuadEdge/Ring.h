@@ -6,14 +6,16 @@
 namespace QuadEdge_NS
 {
   template <typename V, typename F>
-  class Ring
+  class Ring : private std::shared_ptr<V>
   {
+    typedef std::shared_ptr<V> shared_ptr;
+
   public:
 
+    typedef V                   Data;
     typedef Ring<F, V>          Dual;
-    typedef std::shared_ptr<V>  Data;
 
-    Ring( Ring& i_next, Dual& i_dual, Data i_data ) : d_next( &i_next ), d_dual( &i_dual ), d_data( i_data ) {}
+    Ring( Ring& i_next, Dual& i_dual ) : d_next( &i_next ), d_dual( &i_dual ) {}
 
     //  iterate edges in the ring
     const Ring& next() const { return *d_next; }
@@ -24,18 +26,18 @@ namespace QuadEdge_NS
     Dual&       dual()       { return *d_dual; }
 
     //  access ring user data for read/write purposes
-    const Data  operator -> () const { return d_data; }
-    Data        operator -> ()       { return d_data; }
-
-    bool operator == ( const Ring& i_ring ) const { return d_data == i_ring.d_data; }
+    using shared_ptr::operator ->;
+    using shared_ptr::operator *;
 
     template <typename V, typename F> friend void splice( Ring<V, F>& a, Ring<V, F>& b );
+    template <typename V, typename F> friend class Quad;
 
   private:
 
     Ring();
     Ring( const Ring& );
     Ring& operator = ( const Ring& );
+    Ring& operator = ( shared_ptr i_data ) { shared_ptr::operator = ( i_data ); return *this; }
 
   private:
 
@@ -43,19 +45,18 @@ namespace QuadEdge_NS
     void swap( Ring& i_ring ) { std::swap( d_next, i_ring.d_next ); }
 
     //  merge/tear the ring data [i_ring] to/from [this] ring data
-    void fuse( Ring& i_ring ) { i_ring.data( i_ring.d_data == d_data ? clone() : d_data ); }
+    void fuse( Ring& i_ring ) { i_ring.data( i_ring == *this ? clone() : *this ); }
 
     //  set new data to the ring
-    void data( Data i_data ) { Ring* p = this; do { p->d_data = i_data; } while( ( p = p->d_next ) != this ); }
+    void data( shared_ptr i_data ) { Ring* p = this; do { *p = i_data; } while( ( p = p->d_next ) != this ); }
     
-    //Data clone() const { return Data( new V( *d_data ) ); }
-    Data clone() const { return Data( new V ); }
+    //  create new data instance for decoupled ring
+    shared_ptr clone() const { return shared_ptr( new V ); }
 
   private:
 
     Ring* d_next;
     Dual* d_dual;
-    Data  d_data;
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -80,18 +81,24 @@ namespace QuadEdge_NS
   {
     Quad( const Quad& );
     Quad& operator = ( const Quad& );
+
+    Quad()
+      : d_oVert( d_oVert, d_rFace )
+      , d_rFace( d_lFace, d_dVert )
+      , d_dVert( d_dVert, d_lFace )
+      , d_lFace( d_rFace, d_oVert )
+    {
+      o().data( Prim::shared_ptr( new V ) );
+      d().data( Prim::shared_ptr( new V ) );
+      r().data( Dual::shared_ptr( new F ) );  //  l = r
+    }
     
   public:
 
     typedef Ring<V, F>  Prim;
     typedef Ring<F, V>  Dual;
 
-    Quad()
-      : d_oVert( d_oVert, d_rFace, Prim::Data( new V ) )
-      , d_rFace( d_lFace, d_dVert, Dual::Data( new F ) )
-      , d_dVert( d_dVert, d_lFace, Prim::Data( new V ) )
-      , d_lFace( d_rFace, d_oVert, d_rFace.operator->() )
-    {}
+    static std::shared_ptr<Quad> create() { return std::shared_ptr<Quad>( new Quad ); }
 
     const Prim& o() const { return d_oVert; }
     Prim&       o()       { return d_oVert; }
