@@ -102,12 +102,6 @@ namespace QuadEdge_NS
   template <typename V, typename F>
   void splice( Edge<V, F> a, Edge<V, F> b )
   {
-    Ring<V, F>& pa = a.o();
-    Ring<V, F>& pb = b.o();
-    Ring<F, V>& da = pa.next().dual();
-    Ring<F, V>& db = pb.next().dual();
-
-    pa.fuse( pb );
-    da.fuse( db );
+    splice( a.o(), b.o() );
   }
 }

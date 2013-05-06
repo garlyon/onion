@@ -20,29 +20,24 @@ void QuadEdge_NS::test()
   typedef Edge<VertData, FaceData> E;
 
   std::shared_ptr<Q> a( new Q );
-  std::shared_ptr<Q> b( new Q );
-  std::shared_ptr<Q> c( new Q );
 
-  E ea( a->o() );
-  E eb( b->o() );
-  E ec( c->o() );
+  E e( a->o() );
 
-  ea.o()->vid = "A";
-  eb.o()->vid = "B";
-  ec.o()->vid = "C";
 
-  ea.l()->fid = "In";
-  ea.r()->fid = "Out";
+  e.o()->vid = "Orig";
+  e.d()->vid = "Dest";
 
-  splice( eb, ea.sym() ); //  reset ea.d and ea.r
-  splice( ec, eb.sym() ); //  reset eb.d and eb.r
-  splice( ea, ec.sym() ); //  reset ec.d and ec.r
+  e.l()->fid = "Left";  //   = right
 
+  bool x;
   std::string s;
 
-  s = ea.o()->vid;
-  s = eb.o()->vid;
-  s = ec.o()->vid;
-  s = ea.l()->fid;
-  s = ea.r()->fid;
+  splice( e, e.sym() ); //  expect e.o = e.d = Orig; e.l = "Left", e.r = new
+
+  s = e.o()->vid;
+  s = e.d()->vid;
+  s = e.l()->fid;
+  s = e.r()->fid;
+
+  splice( e, e.sym() );
 }

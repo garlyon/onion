@@ -26,14 +26,10 @@ namespace QuadEdge_NS
     //  access ring user data for read/write purposes
     const Data  operator -> () const { return d_data; }
     Data        operator -> ()       { return d_data; }
-    
-    //  merge/tear the [i_ring] to/from [this]
-    //  [this] ring data does not change
-    void fuse( Ring& i_ring )
-    {
-      std::swap( d_next, i_ring.d_next );
-      i_ring.data( i_ring.d_data == d_data ? Data( new V ) : d_data );
-    }
+
+    bool operator == ( const Ring& i_ring ) const { return d_data == i_ring.d_data; }
+
+    template <typename V, typename F> friend void splice( Ring<V, F>& a, Ring<V, F>& b );
 
   private:
 
@@ -43,7 +39,17 @@ namespace QuadEdge_NS
 
   private:
 
+    //  merge/tear the edge ring [i_ring] to/from [this] edge ring
+    void swap( Ring& i_ring ) { std::swap( d_next, i_ring.d_next ); }
+
+    //  merge/tear the ring data [i_ring] to/from [this] ring data
+    void fuse( Ring& i_ring ) { i_ring.data( i_ring.d_data == d_data ? clone() : d_data ); }
+
+    //  set new data to the ring
     void data( Data i_data ) { Ring* p = this; do { p->d_data = i_data; } while( ( p = p->d_next ) != this ); }
+    
+    //Data clone() const { return Data( new V( *d_data ) ); }
+    Data clone() const { return Data( new V ); }
 
   private:
 
@@ -51,6 +57,21 @@ namespace QuadEdge_NS
     Dual* d_dual;
     Data  d_data;
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  template <typename V, typename F>
+  void splice( Ring<V, F>& a, Ring<V, F>& b )
+  {
+    //  swap links in L edges ring
+    a.next().dual().swap( b.next().dual() );
+    //  fuse L ring data
+    a.dual().dual().dual().fuse( b.dual().dual().dual() );
+    //  swap links in O edges ring
+    a.swap( b );
+    //  fuse O ring data
+    a.fuse( b );
+  }
 
   /////////////////////////////////////////////////////////////////////////////
 
