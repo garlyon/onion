@@ -6,10 +6,8 @@
 namespace QuadEdge_NS
 {
   template <typename T>
-  class Ring : private std::shared_ptr<typename T::Prim>
+  class Ring
   {
-    typedef std::shared_ptr<typename T::Prim> shared_ptr;
-
   public:
 
     typedef typename T::Prim             Data;
@@ -27,8 +25,10 @@ namespace QuadEdge_NS
     Dual&       dual()       { return *d_dual; }
 
     //  access ring user data for read/write purposes
-    using shared_ptr::operator ->;
-    using shared_ptr::operator *;
+    const Data& operator -> () const { return *d_data; }
+    Data&       operator -> ()       { return *d_data; }
+
+    bool operator == ( const Ring& i_ring ) const { return d_data == i_ring.d_data; }
 
     template <typename T> friend void splice( Ring<T>& a, Ring<T>& b );
     template <typename T> friend class Quad;
@@ -38,26 +38,28 @@ namespace QuadEdge_NS
     Ring();
     Ring( const Ring& );
     Ring& operator = ( const Ring& );
-    Ring& operator = ( shared_ptr i_data ) { shared_ptr::operator = ( i_data ); return *this; }
 
   private:
+
+    typedef std::shared_ptr<typename T::Prim> shared_ptr;
 
     //  merge/tear the edge ring [i_ring] to/from [this] edge ring
     void swap( Ring& i_ring ) { std::swap( d_next, i_ring.d_next ); }
 
     //  merge/tear the ring data [i_ring] to/from [this] ring data
-    void fuse( Ring& i_ring ) { i_ring.data( i_ring == *this ? clone() : *this ); }
+    void fuse( Ring& i_ring ) { i_ring.data( i_ring == *this ? create() : d_data ); }
 
     //  set new data to the ring
-    void data( shared_ptr i_data ) { Ring* p = this; do { *p = i_data; } while( ( p = p->d_next ) != this ); }
+    void data( shared_ptr i_data ) { Ring* p = this; do { p->d_data = i_data; } while( ( p = p->d_next ) != this ); }
     
     //  create new data instance for decoupled ring
-    shared_ptr clone() const { return shared_ptr( new Data ); }
+    static shared_ptr create() { return shared_ptr( new Data ); }
 
   private:
 
-    Ring* d_next;
-    Dual* d_dual;
+    Ring*       d_next;
+    Dual*       d_dual;
+    shared_ptr  d_data;
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -92,9 +94,9 @@ namespace QuadEdge_NS
       , d_dVert( d_dVert, d_lFace )
       , d_lFace( d_rFace, d_oVert )
     {
-      o().data( Prim::shared_ptr( new V ) );
-      d().data( Prim::shared_ptr( new V ) );
-      r().data( Dual::shared_ptr( new F ) );  //  l = r
+      o().data( Prim::create() );
+      d().data( Prim::create() );
+      r().data( Dual::create() );  //  l = r
     }
     
   public:
