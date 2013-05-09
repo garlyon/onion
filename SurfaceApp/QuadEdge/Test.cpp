@@ -1,38 +1,42 @@
 #include "Test.h"
 #include "Ring.h"
 #include "Edge.h"
-//#include "Shape.h"
 #include <string>
-
-struct VertData;
-struct FaceData;
 
 struct VertData
 {
-  typedef VertData Prim;
-  typedef FaceData Dual;
-
-  const VertData* operator -> () const { return this; }
-  VertData*       operator -> ()       { return this; }
-
   std::string vid;
 };
 
 struct FaceData
-{
-  typedef FaceData Prim;
-  typedef VertData Dual;
-  
-  const FaceData* operator -> () const { return this; }
-  FaceData*       operator -> ()       { return this; }
-
+{  
   std::string fid;
+};
+
+template <size_t> struct Vert;
+template <size_t> struct Face;
+
+template <size_t id>
+struct Vert : public VertData
+{
+  typedef Face<id>                      Dual;
+  typedef QuadEdge_NS::Reg<Vert, id>    Reg;
+};
+
+template <size_t id>
+struct Face : public FaceData
+{
+  typedef Vert<id>                      Dual;
+  typedef QuadEdge_NS::Reg<Face, id>    Reg;
 };
 
 void QuadEdge_NS::test()
 {
-  typedef Quad<VertData> Q;
-  typedef Edge<VertData> E;
+  typedef Quad<Vert<0>> Q;
+  typedef Edge<Vert<0>> E;
+
+  auto& verts = Vert<0>::Reg::get();
+  auto& faces = Face<0>::Reg::get();
 
   std::shared_ptr<Q> a = Q::create();
 
@@ -52,6 +56,11 @@ void QuadEdge_NS::test()
   s = e.d()->vid;
   s = e.l()->fid;
   s = e.r()->fid;
+
+  auto& f = QuadEdge_NS::Edge<Face<0>>( (*Face<0>::Reg::get().begin())->ring() );
+
+  s = f.o()->fid;
+  s = f.d()->fid;
 
   splice( e, e.sym() );
 }

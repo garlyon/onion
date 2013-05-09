@@ -59,7 +59,7 @@ namespace QuadEdge_NS
   template <typename T>
   struct ConstEdgeTraits
   {
-    typedef typename T::Prim      Prim;
+    typedef typename T            Prim;
     typedef typename T::Dual      Dual;
     typedef ConstEdge<Prim>       PrimEdge;
     typedef ConstEdge<Dual>       DualEdge;
@@ -83,7 +83,7 @@ namespace QuadEdge_NS
   template <typename T>
   struct EdgeTraits
   {
-    typedef typename T::Prim      Prim;
+    typedef typename T            Prim;
     typedef typename T::Dual      Dual;
     typedef Edge<Prim>            PrimEdge;
     typedef Edge<Dual>            DualEdge;

@@ -80,7 +80,6 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="QuadEdgeAPI.h" />
     <ClInclude Include="Ring.h" />
-    <ClInclude Include="Shape.h" />
     <ClInclude Include="Test.h" />
   </ItemGroup>
   <ItemGroup>

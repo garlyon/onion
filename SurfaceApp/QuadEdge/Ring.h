@@ -2,16 +2,71 @@
 
 #include <algorithm>
 #include <memory>
+#include <unordered_set>
 
 namespace QuadEdge_NS
 {
+  template <typename T> class Core;
+
+  template <typename T, size_t id>
+  class Reg : private std::unordered_set<Core<T>*>
+  {
+    typedef std::unordered_set<Core<T>*> set;
+
+    Reg(){}
+
+    Reg( const Reg& );
+    Reg& operator = ( const Reg& );
+
+  public:
+
+    static Reg& get() { static Reg s_this; return s_this; }
+
+    using set::begin;
+    using set::end;
+    using set::find;
+    using set::size;
+    using set::empty;
+
+    void reg  ( Core<T>* i_core ) { insert( i_core ); }
+    void unreg( Core<T>* i_core ) { erase ( i_core ); }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  template <typename T> class Ring;
+
+  template <typename T>
+  class Core : public T
+  {
+    Core();
+    Core( const Core& );
+    Core& operator = ( const Core& );
+
+  public:
+
+    Core( Ring<T>& i_ring ) : d_ring( i_ring ) { T::Reg::get().reg( this ); }
+    ~Core()                                    { T::Reg::get().unreg( this ); }
+
+    const T* operator -> () const { return this; }
+    T*       operator -> ()       { return this; }
+
+    const Ring<T>& ring() const { return d_ring; }
+    Ring<T>&       ring()       { return d_ring; }
+
+  private:
+
+    Ring<T>& d_ring;
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+
   template <typename T>
   class Ring
   {
   public:
 
-    typedef typename T::Prim             Data;
-    typedef Ring<typename T::Prim>       Prim;
+    typedef Core<T>                      Data;
     typedef Ring<typename T::Dual>       Dual;
 
     Ring( Ring& i_next, Dual& i_dual ) : d_next( &i_next ), d_dual( &i_dual ) {}
@@ -41,19 +96,19 @@ namespace QuadEdge_NS
 
   private:
 
-    typedef std::shared_ptr<typename T::Prim> shared_ptr;
+    typedef std::shared_ptr<Data> shared_ptr;
 
     //  merge/tear the edge ring [i_ring] to/from [this] edge ring
     void swap( Ring& i_ring ) { std::swap( d_next, i_ring.d_next ); }
 
     //  merge/tear the ring data [i_ring] to/from [this] ring data
-    void fuse( Ring& i_ring ) { i_ring.data( i_ring == *this ? create() : d_data ); }
+    void fuse( Ring& i_ring ) { i_ring.data( i_ring == *this ? i_ring.create() : d_data ); }
 
     //  set new data to the ring
     void data( shared_ptr i_data ) { Ring* p = this; do { p->d_data = i_data; } while( ( p = p->d_next ) != this ); }
     
     //  create new data instance for decoupled ring
-    static shared_ptr create() { return shared_ptr( new Data ); }
+    shared_ptr create() { return shared_ptr( new Data( *this ) ); }
 
   private:
 
@@ -82,9 +137,6 @@ namespace QuadEdge_NS
   template <typename T>
   class Quad
   {
-    typedef typename T::Prim     V;
-    typedef typename T::Dual     F;
-
     Quad( const Quad& );
     Quad& operator = ( const Quad& );
 
@@ -94,15 +146,15 @@ namespace QuadEdge_NS
       , d_dVert( d_dVert, d_lFace )
       , d_lFace( d_rFace, d_oVert )
     {
-      o().data( Prim::create() );
-      d().data( Prim::create() );
-      r().data( Dual::create() );  //  l = r
+      o().data( o().create() );
+      d().data( d().create() );
+      r().data( r().create() );  //  l = r
     }
     
   public:
 
-    typedef Ring<V>     Prim;
-    typedef Ring<F>     Dual;
+    typedef Ring<T>                     Prim;
+    typedef typename Ring<T>::Dual      Dual;
 
     static std::shared_ptr<Quad> create() { return std::shared_ptr<Quad>( new Quad ); }
 
