@@ -27,6 +27,14 @@ namespace Ring_NS
 
     Ring( Leaf& i_owner ) : d_owner( i_owner ) {}
 
+    //  user data accessor
+    const Core& operator -> ( ) const { return *d_core; }
+    Core&       operator -> ( )       { return *d_core; }
+
+    //  user data constructor
+    template <typename ... Args>
+    void reset( Args&& ... i_args ) { d_core = std::make_unique<Core>( i_args... ); }
+
   private:
 
     Leaf&                   d_owner;
