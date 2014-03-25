@@ -3,6 +3,7 @@
 #include "Leaf.h"
 #include "Quad.h"
 #include <string>
+#include "Splice.h"
 
 
 struct VertData;
@@ -50,7 +51,7 @@ int FaceData::s_counter = 0;
 void QuadEdge_NS::test()
 {
   {
-    Quad_NS::Quad<VertData> q;
+    Quad_NS::Quad<VertData> p, q;
 
     auto& e = q.leaf();
 
@@ -59,6 +60,10 @@ void QuadEdge_NS::test()
     e->vid = "Yahoo Tanok!";
 
     e.dual().ring().reset( 13 );
+
+    p.leaf().ring().reset();
+
+    Splice_NS::splice( e, p.leaf() );
   }
 
   bool v = VertData::s_counter == 0;

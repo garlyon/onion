@@ -36,6 +36,9 @@
     <ClInclude Include="Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Splice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuadEdgeAPI.cpp">

@@ -46,11 +46,28 @@ namespace Leaf_NS
     //  exchange links
     void swap( Leaf& o ) { std::swap( d_next, o.d_next ); }
 
-    //  take other's leaf core
+    //  take other's leaf ring
     void reset( Leaf& o ) { ring( o.d_ring ); }
 
     //  take unique core
     void reset() { ring( std::make_shared<Ring>( *this ) ); }
+
+    //  half of edge splice operation, changes own ring
+    void fuse( Leaf& o )
+    {
+      if( d_ring == o.d_ring )
+      {
+        //  detach this leaf from other leaf
+        swap( o );
+        reset();
+      }
+      else
+      {
+        //  attach this leaf to other leaf
+        reset( o );
+        swap( o );
+      }
+    }
 
   private:
 
