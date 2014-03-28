@@ -1,111 +1,52 @@
 #pragma once
 
+
+#include "Leaf.h"
 #include "Ring.h"
+#include "Splice.h"
 
-namespace QuadEdge_NS
+
+namespace Edge_NS
 {
-  template <typename T>
-  class RingRef
+  template <typename Core>
+  class Edge
   {
   public:
 
-    typedef typename T::PrimEdge    PrimEdge;
-    typedef typename T::DualEdge    DualEdge;
-    typedef typename T::PrimRing    PrimRing;
-    typedef typename T::DualRing    DualRing;
+    using Dual = Edge<typename Core::Dual>;
+    using Ring = Ring_NS::Ring<Core>;
 
-    RingRef( PrimRing& i_ring ) : d_ring( i_ring ) {}
+    Edge() : d_ptr( nullptr ) {}
+    Edge( Leaf_NS::Leaf<Core>& ref ) : d_ptr( &ref ) {}
 
-    PrimEdge oNext() const { return d_ring.next(); }
-    PrimEdge oPrev() const { return d_ring.dual().next().dual(); }
+    Edge oNext() const { return d_ptr->next(); }
+    Edge oPrev() const { return d_ptr->dual().next().dual(); }
 
-    PrimEdge dNext() const { return d_ring.dual().dual().next().dual().dual(); }
-    PrimEdge dPrev() const { return d_ring.dual().dual().dual().next().dual().dual().dual(); }
+    Edge dNext() const { return d_ptr->dual().dual().next().dual().dual(); }
+    Edge dPrev() const { return d_ptr->dual().dual().dual().next().dual().dual().dual(); }
 
-    PrimEdge lNext() const { return d_ring.dual().dual().dual().next().dual(); }
-    PrimEdge lPrev() const { return d_ring.next().dual().dual(); }
+    Edge lNext() const { return d_ptr->dual().dual().dual().next().dual(); }
+    Edge lPrev() const { return d_ptr->next().dual().dual(); }
 
-    PrimEdge rNext() const { return d_ring.dual().next().dual().dual().dual(); }
-    PrimEdge rPrev() const { return d_ring.dual().dual().next(); }
+    Edge rNext() const { return d_ptr->dual().next().dual().dual().dual(); }
+    Edge rPrev() const { return d_ptr->dual().dual().next(); }
 
-    DualEdge rot()   const { return d_ring.dual(); }
-    PrimEdge sym()   const { return d_ring.dual().dual(); }
+    Dual rot()   const { return d_ptr->dual(); }
+    Edge sym()   const { return d_ptr->dual().dual(); }
 
-    const PrimRing& o() const { return d_ring; }
-    const DualRing& r() const { return d_ring.dual(); }
-    const PrimRing& d() const { return d_ring.dual().dual(); }
-    const DualRing& l() const { return d_ring.dual().dual().dual(); }
-    
-    PrimRing& o() { return d_ring; }
-    DualRing& r() { return d_ring.dual(); }
-    PrimRing& d() { return d_ring.dual().dual(); }
-    DualRing& l() { return d_ring.dual().dual().dual(); }
+    const Ring& ring() const { return d_ptr->ring(); }
+    Ring&       ring()       { return d_ptr->ring(); }
+
+    const Ring& operator -> ( ) const { return d_ptr->ring(); }
+    Ring&       operator -> ( )       { return d_ptr->ring(); }
+
+    friend void splice( Edge a, Edge b ) { Splice_NS::splice( *a.d_ptr, *b.d_ptr ); }
 
   private:
 
-    RingRef();
-    RingRef& operator = ( const RingRef& );
-
-  private:
-
-    PrimRing& d_ring;
+    Leaf_NS::Leaf<Core>* d_ptr;
   };
 
-  /////////////////////////////////////////////////////////////////////////////
   
-  template <typename T>
-  class ConstEdge;
-
-  template <typename T>
-  struct ConstEdgeTraits
-  {
-    typedef typename T            Prim;
-    typedef typename T::Dual      Dual;
-    typedef ConstEdge<Prim>       PrimEdge;
-    typedef ConstEdge<Dual>       DualEdge;
-    typedef const Ring<Prim>      PrimRing;
-    typedef const Ring<Dual>      DualRing;
-  };
-
-  template <typename T>
-  class ConstEdge : public RingRef<ConstEdgeTraits<T>>
-  {
-  public:
-    
-    ConstEdge( const Ring<T>& i_ring ) : RingRef( i_ring ) {}
-  };
-
   /////////////////////////////////////////////////////////////////////////////
-
-  template <typename T>
-  class Edge;
-
-  template <typename T>
-  struct EdgeTraits
-  {
-    typedef typename T            Prim;
-    typedef typename T::Dual      Dual;
-    typedef Edge<Prim>            PrimEdge;
-    typedef Edge<Dual>            DualEdge;
-    typedef Ring<Prim>            PrimRing;
-    typedef Ring<Dual>            DualRing;
-  };
-
-  template <typename T>
-  class Edge : public RingRef<EdgeTraits<T>>
-  {
-  public:
-    
-    Edge( Ring<T>& i_ring ) : RingRef( i_ring ) {}
-
-    operator ConstEdge<T> () const { return o(); }
-  };
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  template <typename T>
-  void splice( Edge<T> a, Edge<T> b )
-  {
-    splice( a.o(), b.o() );
-  }
 }

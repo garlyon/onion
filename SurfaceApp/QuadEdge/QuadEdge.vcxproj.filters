@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{13db5695-318e-4332-b3a0-8caa8bb9d05b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{8de1366e-69d3-4446-a1d7-7d0199c89dec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,20 +30,23 @@
     <ClInclude Include="Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Edge.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Leaf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Ring.h">
-      <Filter>Header Files</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="Quad.h">
-      <Filter>Header Files</Filter>
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="Ring.h">
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="Splice.h">
-      <Filter>Header Files</Filter>
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

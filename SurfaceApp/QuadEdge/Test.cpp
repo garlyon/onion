@@ -2,6 +2,8 @@
 #include "Ring.h"
 #include "Leaf.h"
 #include "Quad.h"
+#include "Edge.h"
+#include "Shape.h"
 #include <string>
 #include "Splice.h"
 
@@ -53,17 +55,33 @@ void QuadEdge_NS::test()
   {
     Quad_NS::Quad<VertData> p, q;
 
-    auto& e = q.leaf();
+    {
+      auto& e = q.leaf();
 
-    e.ring().reset();
+      e.ring().reset();
 
-    e->vid = "Yahoo Tanok!";
+      e->vid = "Yahoo Tanok!";
 
-    e.dual().ring().reset( 13 );
+      e.dual().ring().reset( 13 );
 
-    p.leaf().ring().reset();
+      p.leaf().ring().reset();
 
-    Splice_NS::splice( e, p.leaf() );
+      Splice_NS::splice( e, p.leaf() );
+    }
+
+    {
+      Shape_NS::Shape<VertData> s;
+
+      auto e = s.make();
+
+      auto q = e.dNext().dPrev().lNext().lPrev().oNext().oPrev().rNext().rPrev().rot().sym();
+
+      q.ring().reset();
+
+      q.rot()->vid = "Ahha, faico!!";
+
+      splice( q.rot(), e );
+    }
   }
 
   bool v = VertData::s_counter == 0;
