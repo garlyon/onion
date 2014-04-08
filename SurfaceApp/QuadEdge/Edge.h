@@ -14,7 +14,8 @@ namespace Edge_NS
   public:
 
     using Dual = Edge<typename Core::Dual>;
-    using Ring = Ring_NS::Ring<Core>;
+    using Vert = Ring_NS::Ring<Core>;
+    using Face = Ring_NS::Ring<typename Core::Dual>;
 
     Edge() : d_ptr( nullptr ) {}
     Edge( Leaf_NS::Leaf<Core>& ref ) : d_ptr( &ref ) {}
@@ -34,11 +35,17 @@ namespace Edge_NS
     Dual rot()   const { return d_ptr->dual(); }
     Edge sym()   const { return d_ptr->dual().dual(); }
 
-    const Ring& ring() const { return d_ptr->ring(); }
-    Ring&       ring()       { return d_ptr->ring(); }
+    const Vert& o() const { return d_ptr->ring(); }
+    Vert&       o()       { return d_ptr->ring(); }
 
-    const Ring& operator -> ( ) const { return d_ptr->ring(); }
-    Ring&       operator -> ( )       { return d_ptr->ring(); }
+    const Vert& d() const { return sym().o(); }
+    Vert&       d()       { return sym().o(); }
+
+    const Face& l() const { return sym().rot().o(); }
+    Face&       l()       { return sym().rot().o(); }
+
+    const Face& r() const { return rot().o(); }
+    Face&       r()       { return rot().o(); }
 
     friend void splice( Edge a, Edge b ) { Splice_NS::splice( *a.d_ptr, *b.d_ptr ); }
 
@@ -46,7 +53,4 @@ namespace Edge_NS
 
     Leaf_NS::Leaf<Core>* d_ptr;
   };
-
-  
-  /////////////////////////////////////////////////////////////////////////////
 }

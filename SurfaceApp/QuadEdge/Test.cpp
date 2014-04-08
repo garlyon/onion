@@ -1,11 +1,7 @@
 #include "Test.h"
-#include "Ring.h"
-#include "Leaf.h"
-#include "Quad.h"
 #include "Edge.h"
 #include "Shape.h"
 #include <string>
-#include "Splice.h"
 
 
 struct VertData;
@@ -16,30 +12,16 @@ struct VertData
 {
   std::string vid;
 
-  static int s_counter;
-
-  VertData() { ++s_counter; }
-  ~VertData() { --s_counter; }
-
   using Dual = FaceData;
   
   const VertData* operator -> ( ) const { return this; }
   VertData*       operator -> ( )       { return this; }
 };
 
-int VertData::s_counter = 0;
-
 
 struct FaceData
 {  
-  int fid;
-
-  static int s_counter;
-
-  FaceData() { ++s_counter; }
-  ~FaceData() { --s_counter; }
-
-  FaceData( int i_fid ) : FaceData() { fid = i_fid; }
+  std::string fid;
 
   using Dual = VertData;
 
@@ -47,43 +29,24 @@ struct FaceData
   FaceData*       operator -> ( )       { return this; }
 };
 
-int FaceData::s_counter = 0;
-
 
 void QuadEdge_NS::test()
 {
-  {
-    Quad_NS::Quad<VertData> p, q;
+  Shape_NS::Shape<VertData> s;
 
-    {
-      auto& e = q.leaf();
+  Edge_NS::Edge<VertData> a = s.make();
+  Edge_NS::Edge<VertData> b = s.make();
+  Edge_NS::Edge<VertData> c = s.make();
 
-      e.ring().reset();
+  splice( a.sym(), b );
+  splice( b.sym(), c );
+  splice( c.sym(), a );
 
-      e->vid = "Yahoo Tanok!";
+  a.o().reset();
+  b.o().reset();
+  c.o().reset();
 
-      e.dual().ring().reset( 13 );
-
-      p.leaf().ring().reset();
-
-      Splice_NS::splice( e, p.leaf() );
-    }
-
-    {
-      Shape_NS::Shape<VertData> s;
-
-      auto e = s.make();
-
-      auto q = e.dNext().dPrev().lNext().lPrev().oNext().oPrev().rNext().rPrev().rot().sym();
-
-      q.ring().reset();
-
-      q.rot()->vid = "Ahha, faico!!";
-
-      splice( q.rot(), e );
-    }
-  }
-
-  bool v = VertData::s_counter == 0;
-  bool f = FaceData::s_counter == 0;
+  a.o()->vid = "A";
+  a.d()->vid = "B";
+  b.d()->vid = "C";
 }

@@ -4,7 +4,7 @@
 //
 //  class Leaf
 //  {
-//    Core* core  //  all lifs in a list refer to the same core
+//    Ring* ring  //  all lifs in a list refer to the same ring
 //    Leaf* next
 //    Leaf* dual
 //  }
@@ -39,9 +39,6 @@ namespace Leaf_NS
 
     const Ring& ring() const { return *d_ring; }
     Ring&       ring()       { return *d_ring; }
-
-    const Ring& operator -> ( ) const { return ring(); }
-    Ring&       operator -> ( )       { return ring(); }
 
     //  exchange links
     void swap( Leaf& o ) { std::swap( d_next, o.d_next ); }
