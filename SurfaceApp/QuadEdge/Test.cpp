@@ -49,4 +49,13 @@ void QuadEdge_NS::test()
   a.o()->vid = "A";
   a.d()->vid = "B";
   b.d()->vid = "C";
+
+  auto v = s.verts();
+  auto f = s.faces();
+
+  s.compress();
+
+  s.make();
+
+  s.compress();
 }
