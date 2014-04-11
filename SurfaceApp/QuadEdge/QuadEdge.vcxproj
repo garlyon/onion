@@ -78,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Quad.h" />
-    <ClInclude Include="Ring.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="QuadEdgeAPI.h" />
     <ClInclude Include="Leaf.h" />

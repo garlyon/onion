@@ -1,9 +1,6 @@
 #pragma once
 
 
-#include "Ring.h"
-
-
 namespace Splice_NS
 {
   template <typename Core>

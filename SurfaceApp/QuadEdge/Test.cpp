@@ -13,9 +13,6 @@ struct VertData
   std::string vid;
 
   using Dual = FaceData;
-  
-  const VertData* operator -> ( ) const { return this; }
-  VertData*       operator -> ( )       { return this; }
 };
 
 
@@ -24,9 +21,6 @@ struct FaceData
   std::string fid;
 
   using Dual = VertData;
-
-  const FaceData* operator -> ( ) const { return this; }
-  FaceData*       operator -> ( )       { return this; }
 };
 
 
@@ -42,13 +36,9 @@ void QuadEdge_NS::test()
   splice( b.sym(), c );
   splice( c.sym(), a );
 
-  a.o().reset();
-  b.o().reset();
-  c.o().reset();
-
-  a.o()->vid = "A";
-  a.d()->vid = "B";
-  b.d()->vid = "C";
+  a.o().vid = "A";
+  a.d().vid = "B";
+  b.d().vid = "C";
 
   auto v = s.verts();
   auto f = s.faces();

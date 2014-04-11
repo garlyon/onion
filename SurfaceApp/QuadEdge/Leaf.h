@@ -4,7 +4,7 @@
 //
 //  class Leaf
 //  {
-//    Ring* ring  //  all lifs in a list refer to the same ring
+//    Core* core  //  all lifs in a list refer to the same core
 //    Leaf* next
 //    Leaf* dual
 //  }
@@ -14,9 +14,6 @@
 #include <memory>
 
 
-namespace Ring_NS { template <typename> class Ring; }
-
-
 namespace Leaf_NS
 {
   template <typename Core>
@@ -24,10 +21,9 @@ namespace Leaf_NS
   {
   public:
 
-    using Ring = Ring_NS::Ring<Core>;
     using Dual = Leaf<typename Core::Dual>;
 
-    Leaf( Dual& i_dual ) : d_next( this ), d_dual( i_dual ), d_ring( std::make_shared<Ring>( *this ) ) {}
+    Leaf( Dual& i_dual ) : d_next( this ), d_dual( i_dual ), d_core( std::make_shared<Core>() ) {}
 
     //  topology accessors
 
@@ -37,22 +33,22 @@ namespace Leaf_NS
     const Dual& dual() const { return d_dual; }
     Dual&       dual()       { return d_dual; }
 
-    const Ring& ring() const { return *d_ring; }
-    Ring&       ring()       { return *d_ring; }
+    const Core& core() const { return *d_core; }
+    Core&       core()       { return *d_core; }
 
     //  exchange links
     void swap( Leaf& o ) { std::swap( d_next, o.d_next ); }
 
-    //  take other's leaf ring
-    void reset( Leaf& o ) { ring( o.d_ring ); }
+    //  take other's leaf core
+    void reset( Leaf& o ) { core( o.d_core ); }
 
     //  take unique core
-    void reset() { ring( std::make_shared<Ring>( *this ) ); }
+    void reset() { core( std::make_shared<Core>() ); }
 
-    //  half of edge splice operation, changes own ring
+    //  half of edge splice operation, changes own core
     void fuse( Leaf& o )
     {
-      if( d_ring == o.d_ring )
+      if( d_core == o.d_core )
       {
         //  detach this leaf from other leaf
         swap( o );
@@ -68,15 +64,15 @@ namespace Leaf_NS
 
   private:
 
-    using Ptr = std::shared_ptr<Ring>;
+    using Ptr = std::shared_ptr<Core>;
 
-    void ring( Ptr i_ring ) { Leaf* f = this; do { f->d_ring = i_ring; } while( ( f = f->d_next ) != this ); }
+    void core( Ptr i_core ) { Leaf* f = this; do { f->d_core = i_core; } while( ( f = f->d_next ) != this ); }
 
   private:
 
     Leaf*   d_next;
     Dual&   d_dual;
-    Ptr     d_ring;
+    Ptr     d_core;
 
   private:
 
