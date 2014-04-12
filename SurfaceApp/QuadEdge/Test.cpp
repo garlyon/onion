@@ -48,4 +48,10 @@ void QuadEdge_NS::test()
   s.make();
 
   s.compress();
+
+  const auto& cs = s;
+
+  Edge_NS::ConstEdge<VertData> ca = a;
+
+  bool t = ca.o().vid == cs.verts().front().o().vid;
 }
