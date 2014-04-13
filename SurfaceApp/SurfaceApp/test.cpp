@@ -6,7 +6,7 @@ namespace Test_NS
 {
   bool myTestFunc()
   {
-    QuadEdge_NS::test();
+    Quad_NS::test();
 
     return true;
   }

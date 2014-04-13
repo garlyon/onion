@@ -2,10 +2,9 @@
 
 
 #include "Leaf.h"
-#include "Splice.h"
 
 
-namespace Edge_NS
+namespace Quad_NS
 {
   template <typename Core> class ConstEdge;
 
@@ -22,40 +21,40 @@ namespace Edge_NS
     Edge( const Edge& ) = default;
     Edge& operator = ( const Edge& ) = delete;
 
-    Edge( Leaf_NS::Leaf<Core>& ref ) : d_leaf( ref ) {}
+    Edge( Leaf<Core>& i_leaf ) : d_leaf( i_leaf ) {}
 
-    Edge oNext() const { return d_leaf.next(); }
-    Edge oPrev() const { return d_leaf.dual().next().dual(); }
+    Edge oNext() const { return d_leaf.oNext(); }
+    Edge oPrev() const { return d_leaf.oPrev(); }
 
-    Edge dNext() const { return d_leaf.dual().dual().next().dual().dual(); }
-    Edge dPrev() const { return d_leaf.dual().dual().dual().next().dual().dual().dual(); }
+    Edge dNext() const { return d_leaf.dNext(); }
+    Edge dPrev() const { return d_leaf.dPrev(); }
 
-    Edge lNext() const { return d_leaf.dual().dual().dual().next().dual(); }
-    Edge lPrev() const { return d_leaf.next().dual().dual(); }
+    Edge lNext() const { return d_leaf.lNext(); }
+    Edge lPrev() const { return d_leaf.lPrev(); }
 
-    Edge rNext() const { return d_leaf.dual().next().dual().dual().dual(); }
-    Edge rPrev() const { return d_leaf.dual().dual().next(); }
+    Edge rNext() const { return d_leaf.rNext(); }
+    Edge rPrev() const { return d_leaf.rPrev(); }
 
-    Dual rot()   const { return d_leaf.dual(); }
-    Edge sym()   const { return d_leaf.dual().dual(); }
+    Dual rot()   const { return d_leaf.rot(); }
+    Edge sym()   const { return d_leaf.sym(); }
 
-    const Vert& o() const { return d_leaf.core(); }
-    Vert&       o()       { return d_leaf.core(); }
+    const Vert& o() const { return d_leaf.o(); }
+    Vert&       o()       { return d_leaf.o(); }
 
-    const Vert& d() const { return sym().o(); }
-    Vert&       d()       { return sym().o(); }
+    const Vert& d() const { return d_leaf.d(); }
+    Vert&       d()       { return d_leaf.d(); }
 
-    const Face& l() const { return sym().rot().o(); }
-    Face&       l()       { return sym().rot().o(); }
+    const Face& l() const { return d_leaf.l(); }
+    Face&       l()       { return d_leaf.l(); }
 
-    const Face& r() const { return rot().o(); }
-    Face&       r()       { return rot().o(); }
+    const Face& r() const { return d_leaf.r(); }
+    Face&       r()       { return d_leaf.r(); }
 
-    friend void splice( Edge a, Edge b ) { Splice_NS::splice( a.d_leaf, b.d_leaf ); }
+    friend void splice( Edge a, Edge b ) { splice( a.d_leaf, b.d_leaf ); }
 
   private:
 
-    Leaf_NS::Leaf<Core>& d_leaf;
+    Leaf<Core>& d_leaf;
 
     friend class ConstEdge<Core>;
   };
@@ -73,32 +72,32 @@ namespace Edge_NS
     ConstEdge( const ConstEdge& ) = default;
     ConstEdge& operator = ( const ConstEdge& ) = delete;
 
-    ConstEdge( const Leaf_NS::Leaf<Core>& ref ) : d_leaf( ref ) {}
+    ConstEdge( const Leaf<Core>& i_leaf ) : d_leaf( i_leaf ) {}
 
     ConstEdge( Edge<Core> e ) : d_leaf( e.d_leaf ) {}
 
-    ConstEdge oNext() const { return d_leaf.next(); }
-    ConstEdge oPrev() const { return d_leaf.dual().next().dual(); }
+    ConstEdge oNext() const { return d_leaf.oNext(); }
+    ConstEdge oPrev() const { return d_leaf.oPrev(); }
 
-    ConstEdge dNext() const { return d_leaf.dual().dual().next().dual().dual(); }
-    ConstEdge dPrev() const { return d_leaf.dual().dual().dual().next().dual().dual().dual(); }
+    ConstEdge dNext() const { return d_leaf.dNext(); }
+    ConstEdge dPrev() const { return d_leaf.dPrev(); }
 
-    ConstEdge lNext() const { return d_leaf.dual().dual().dual().next().dual(); }
-    ConstEdge lPrev() const { return d_leaf.next().dual().dual(); }
+    ConstEdge lNext() const { return d_leaf.lNext(); }
+    ConstEdge lPrev() const { return d_leaf.lPrev(); }
 
-    ConstEdge rNext() const { return d_leaf.dual().next().dual().dual().dual(); }
-    ConstEdge rPrev() const { return d_leaf.dual().dual().next(); }
+    ConstEdge rNext() const { return d_leaf.rNext(); }
+    ConstEdge rPrev() const { return d_leaf.rPrev(); }
 
-    ConstDual rot()   const { return d_leaf.dual(); }
-    ConstEdge sym()   const { return d_leaf.dual().dual(); }
+    ConstDual rot()   const { return d_leaf.rot(); }
+    ConstEdge sym()   const { return d_leaf.sym(); }
 
-    const Vert& o() const { return d_leaf.core(); }
-    const Vert& d() const { return sym().o(); }
-    const Face& l() const { return sym().rot().o(); }
-    const Face& r() const { return rot().o(); }
+    const Vert& o() const { return d_leaf.o(); }
+    const Vert& d() const { return d_leaf.d(); }
+    const Face& l() const { return d_leaf.l(); }
+    const Face& r() const { return d_leaf.r(); }
 
   private:
 
-    const Leaf_NS::Leaf<Core>& d_leaf;
+    const Leaf<Core>& d_leaf;
   };
 }

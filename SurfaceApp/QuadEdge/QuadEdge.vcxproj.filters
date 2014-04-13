@@ -36,9 +36,6 @@
     <ClInclude Include="Quad.h">
       <Filter>Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="Splice.h">
-      <Filter>Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="Edge.h">
       <Filter>Interface</Filter>
     </ClInclude>

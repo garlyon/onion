@@ -1,12 +1,6 @@
 #pragma once
 
 
-namespace Leaf_NS { template <typename> class Leaf; }
-
-
-#pragma once
-
-
 #include "Leaf.h"
 
 
@@ -19,8 +13,8 @@ namespace Quad_NS
 
     using Vert = Core;
     using Face = typename Core::Dual;
-    using Prim = Leaf_NS::Leaf<Vert>;
-    using Dual = Leaf_NS::Leaf<Face>;
+    using Prim = Leaf<Vert>;
+    using Dual = Leaf<Face>;
 
     Quad() : d_oVert( d_rFace ), d_dVert( d_lFace ), d_lFace( d_oVert ), d_rFace( d_dVert )
     {
@@ -45,19 +39,19 @@ namespace Quad_NS
 
     //  front-back accessors
 
-    template <typename C> Leaf_NS::Leaf<C>& f();
+    template <typename C> Leaf<C>& f();
     template <> Prim& f<Vert>() { return o(); }
     template <> Dual& f<Face>() { return r(); }
 
-    template <typename C> Leaf_NS::Leaf<C>& b();
+    template <typename C> Leaf<C>& b();
     template <> Prim& b<Vert>() { return d(); }
     template <> Dual& b<Face>() { return l(); }
 
-    template <typename C> const Leaf_NS::Leaf<C>& f() const;
+    template <typename C> const Leaf<C>& f() const;
     template <> const Prim& f<Vert>() const { return o(); }
     template <> const Dual& f<Face>() const { return r(); }
 
-    template <typename C> const Leaf_NS::Leaf<C>& b() const;
+    template <typename C> const Leaf<C>& b() const;
     template <> const Prim& b<Vert>() const { return d(); }
     template <> const Dual& b<Face>() const { return l(); }
 

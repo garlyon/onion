@@ -24,13 +24,13 @@ struct FaceData
 };
 
 
-void QuadEdge_NS::test()
+void Quad_NS::test()
 {
-  Shape_NS::Shape<VertData> s;
+  Shape<VertData> s;
 
-  Edge_NS::Edge<VertData> a = s.make();
-  Edge_NS::Edge<VertData> b = s.make();
-  Edge_NS::Edge<VertData> c = s.make();
+  Edge<VertData> a = s.make();
+  Edge<VertData> b = s.make();
+  Edge<VertData> c = s.make();
 
   splice( a.sym(), b );
   splice( b.sym(), c );
@@ -51,7 +51,7 @@ void QuadEdge_NS::test()
 
   const auto& cs = s;
 
-  Edge_NS::ConstEdge<VertData> ca = a;
+  ConstEdge<VertData> ca = a;
 
   bool t = ca.o().vid == cs.verts().front().o().vid;
 }

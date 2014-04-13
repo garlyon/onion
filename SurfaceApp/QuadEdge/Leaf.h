@@ -14,7 +14,7 @@
 #include <memory>
 
 
-namespace Leaf_NS
+namespace Quad_NS
 {
   template <typename Core>
   class Leaf
@@ -74,6 +74,55 @@ namespace Leaf_NS
     Dual&   d_dual;
     Ptr     d_core;
 
+  public:
+
+    //  derived navigation
+
+    const Leaf& oNext() const { return next(); }
+    Leaf&       oNext()       { return next(); }
+    
+    const Leaf& oPrev() const { return dual().next().dual(); }
+    Leaf&       oPrev()       { return dual().next().dual(); }
+
+    const Leaf& dNext() const { return dual().dual().next().dual().dual(); }
+    Leaf&       dNext()       { return dual().dual().next().dual().dual(); }
+
+    const Leaf& dPrev() const { return dual().dual().dual().next().dual().dual().dual(); }
+    Leaf&       dPrev()       { return dual().dual().dual().next().dual().dual().dual(); }
+
+    const Leaf& lNext() const { return dual().dual().dual().next().dual(); }
+    Leaf&       lNext()       { return dual().dual().dual().next().dual(); }
+
+    const Leaf& lPrev() const { return next().dual().dual(); }
+    Leaf&       lPrev()       { return next().dual().dual(); }
+
+    const Leaf& rNext() const { return dual().next().dual().dual().dual(); }
+    Leaf&       rNext()       { return dual().next().dual().dual().dual(); }
+    
+    const Leaf& rPrev() const { return dual().dual().next(); }
+    Leaf&       rPrev()       { return dual().dual().next(); }
+
+    const Dual& rot() const { return dual(); }
+    Dual&       rot()       { return dual(); }
+    
+    const Leaf& sym() const { return dual().dual(); }
+    Leaf&       sym()       { return dual().dual(); }
+
+    using Vert = Core;
+    using Face = typename Core::Dual;
+
+    const Vert& o() const { return core(); }
+    Vert&       o()       { return core(); }
+
+    const Face& r() const { return rot().core(); }
+    Face&       r()       { return rot().core(); }
+
+    const Vert& d() const { return rot().rot().core(); }
+    Vert&       d()       { return rot().rot().core(); }
+
+    const Face& l() const { return rot().rot().rot().core(); }
+    Face&       l()       { return rot().rot().rot().core(); }
+
   private:
 
     Leaf() = delete;
@@ -82,4 +131,12 @@ namespace Leaf_NS
     Leaf& operator = ( const Leaf& ) = delete;
     Leaf& operator = ( Leaf&& ) = delete;
   };
+
+
+  template <typename Core>
+  void splice( Leaf<Core>& a, Leaf<Core>& b )
+  {
+    b.next().dual().fuse( a.next().dual() );  //  doesn't change *.next() value
+    b.fuse( a );                              //  do changes *.next() value
+  }
 }

@@ -1,6 +1,6 @@
 #include "QuadEdgeAPI.h"
 
-namespace QuadEdge_NS
+namespace Quad_NS
 {
   QUADEDGE_API void test();
 }

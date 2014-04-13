@@ -82,7 +82,6 @@
     <ClInclude Include="QuadEdgeAPI.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Shape.h" />
-    <ClInclude Include="Splice.h" />
     <ClInclude Include="Test.h" />
   </ItemGroup>
   <ItemGroup>
