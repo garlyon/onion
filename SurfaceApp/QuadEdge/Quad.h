@@ -16,11 +16,8 @@ namespace Quad_NS
     using Prim = Leaf<Vert>;
     using Dual = Leaf<Face>;
 
-    Quad() : d_oVert( d_rFace ), d_dVert( d_lFace ), d_lFace( d_oVert ), d_rFace( d_dVert )
-    {
-      d_lFace.swap( d_rFace );
-      d_lFace.reset( d_rFace );
-    }
+    //  straight edge
+    Quad() : d_oVert( d_rFace ), d_dVert( d_lFace ), d_lFace( d_oVert ), d_rFace( d_dVert ) { d_lFace.fuse( d_rFace ); }
 
     //  check if edge connected to other edges or not
     bool unique() const;
@@ -36,24 +33,6 @@ namespace Quad_NS
     Prim& d() { return d_dVert; }
     Dual& l() { return d_lFace; }
     Dual& r() { return d_rFace; }
-
-    //  front-back accessors
-
-    template <typename C> Leaf<C>& f();
-    template <> Prim& f<Vert>() { return o(); }
-    template <> Dual& f<Face>() { return r(); }
-
-    template <typename C> Leaf<C>& b();
-    template <> Prim& b<Vert>() { return d(); }
-    template <> Dual& b<Face>() { return l(); }
-
-    template <typename C> const Leaf<C>& f() const;
-    template <> const Prim& f<Vert>() const { return o(); }
-    template <> const Dual& f<Face>() const { return r(); }
-
-    template <typename C> const Leaf<C>& b() const;
-    template <> const Prim& b<Vert>() const { return d(); }
-    template <> const Dual& b<Face>() const { return l(); }
 
   private:
 

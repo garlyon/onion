@@ -1,12 +1,11 @@
 #pragma once
 
 
-#include "Edge.h"
+#include "Leaf.h"
 #include "Quad.h"
 #include <vector>
 #include <list>
 #include <unordered_set>
-#include <memory>
 #include <functional>
 
 
@@ -22,36 +21,30 @@ namespace Quad_NS
     
     using Quad = Quad<Vert>;
     
-    using Prim = Edge<Vert>;
-    using Dual = Edge<Face>;
-    
-    using ConstPrim = ConstEdge<Vert>;
-    using ConstDual = ConstEdge<Face>;
-    
-    //  primitive construction
-    Prim make() { d_quads.emplace_back(); return d_quads.back().o(); }
+    using Prim = Leaf<Vert>;
+    using Dual = Leaf<Face>;
+        
+    //  single quad edge construction
+    Prim& make() { d_quads.emplace_back(); return d_quads.back().o(); }
 
-    //  topology data accessors
-    std::vector<ConstPrim> verts() const { return nodes<Vert>(); }
-    std::vector<ConstDual> faces() const { return nodes<Face>(); }
-    std::vector<ConstPrim> edges() const { return ribs<Vert>(); }
-    std::vector<ConstDual> duals() const { return ribs<Face>(); }
+    //  list of all primal nodes
+    std::vector<const Prim*> verts() const;
+    std::vector<Prim*>       verts();
 
-    std::vector<Prim> verts() { return nodes<Vert>(); }
-    std::vector<Dual> faces() { return nodes<Face>(); }
-    std::vector<Prim> edges() { return ribs<Vert>(); }
-    std::vector<Dual> duals() { return ribs<Face>(); }
+    //  list of all dual nodes
+    std::vector<const Dual*> faces() const;
+    std::vector<Dual*>       faces();
 
-    //  shape cleanup removes disconnected quads
+    //  list of all primal ribs (full edges)
+    std::vector<const Prim*> prims() const;
+    std::vector<Prim*>       prims();
+
+    //  list of all dual ribs (full co-edges)
+    std::vector<const Dual*> duals() const;
+    std::vector<Dual*>       duals();
+
+    //  shape cleanup removes disconnected quad edges
     void compress() { d_quads.remove_if( []( const Quad& q ) { return q.unique(); } ); }
-
-  private:
-
-    template <typename C> std::vector<ConstEdge<C>> nodes() const;
-    template <typename C> std::vector<ConstEdge<C>> ribs() const;
-
-    template <typename C> std::vector<Edge<C>> nodes();
-    template <typename C> std::vector<Edge<C>> ribs();
 
   private:
 
@@ -59,69 +52,121 @@ namespace Quad_NS
   };
 
 
+  template <typename Core>
+  using Vert = typename Shape<Core>::Vert;
+
+
+  template <typename Core>
+  using Face = typename Shape<Core>::Face;
+
+
+  template <typename Core>
+  using Prim = typename Shape<Core>::Prim;
+
+
+  template <typename Core>
+  using Dual = typename Shape<Core>::Dual;
+
+
   /////////////////////////////////////////////////////////////////////////////
 
 
-  template <typename Core> template <typename C>
-  auto Shape<Core>::nodes() const -> std::vector<ConstEdge<C>>
+  template <typename Core>
+  auto Shape<Core>::verts() const -> std::vector<const Prim*>
   {
-    std::unordered_set<const C*> n;
-    std::vector<ConstEdge<C>> o;
-
-    auto add = [&n, &o]( const Leaf<C>& i ) { if( n.insert( &i.core() ).second ) o.push_back( i ); };
+    std::unordered_set<const Vert*> nodes;
+    std::vector<const Prim*> edges;
 
     for( const Quad& q : d_quads )
     {
-      add( q.f<C>() );
-      add( q.b<C>() );
+      if( nodes.insert( &q.o().o() ).second ) edges.push_back( &q.o() );
+      if( nodes.insert( &q.d().o() ).second ) edges.push_back( &q.d() );
     }
 
-    return o;
+    return edges;
   }
 
 
-  template <typename Core> template <typename C>
-  auto Shape<Core>::nodes() -> std::vector<Edge<C>>
+  template <typename Core>
+  auto Shape<Core>::verts() -> std::vector<Prim*>
   {
-    std::unordered_set<const C*> n;
-    std::vector<Edge<C>> o;
-
-    auto add = [&n, &o]( Leaf<C>& i ) { if( n.insert( &i.core() ).second ) o.push_back( i ); };
+    std::unordered_set<Vert*> nodes;
+    std::vector<Prim*> edges;
 
     for( Quad& q : d_quads )
     {
-      add( q.f<C>() );
-      add( q.b<C>() );
+      if( nodes.insert( &q.o().o() ).second ) edges.push_back( &q.o() );
+      if( nodes.insert( &q.d().o() ).second ) edges.push_back( &q.d() );
     }
 
-    return o;
+    return edges;
   }
 
 
-  template <typename Core> template <typename C>
-  auto Shape<Core>::ribs() const -> std::vector<ConstEdge<C>>
+  template <typename Core>
+  auto Shape<Core>::faces() const -> std::vector<const Dual*>
   {
-    std::vector<ConstEdge<C>> o;
+    std::unordered_set<const Face*> nodes;
+    std::vector<const Dual*> edges;
 
     for( const Quad& q : d_quads )
     {
-      o.push_back( q.f<C>() );
+      if( nodes.insert( &q.l().o() ).second ) edges.push_back( &q.l() );
+      if( nodes.insert( &q.r().o() ).second ) edges.push_back( &q.r() );
     }
 
-    return o;
+    return edges;
   }
 
 
-  template <typename Core> template <typename C>
-  auto Shape<Core>::ribs() -> std::vector<Edge<C>>
+  template <typename Core>
+  auto Shape<Core>::faces() -> std::vector<Dual*>
   {
-    std::vector<Edge<C>> o;
+    std::unordered_set<Face*> nodes;
+    std::vector<Dual*> edges;
 
     for( Quad& q : d_quads )
     {
-      o.push_back( q.f<C>() );
+      if( nodes.insert( &q.l().o() ).second ) edges.push_back( &q.l() );
+      if( nodes.insert( &q.r().o() ).second ) edges.push_back( &q.r() );
     }
 
-    return o;
+    return edges;
+  }
+
+
+  template <typename Core>
+  auto Shape<Core>::prims() const -> std::vector<const Prim*>
+  {
+    std::vector<const Prim*> edges;
+    for( const Quad& q : d_quads ) edges.push_back( &q.o() );
+    return edges;
+  }
+
+
+  template <typename Core>
+  auto Shape<Core>::prims() -> std::vector<Prim*>
+  {
+    std::vector<Prim*> edges;
+    for( Quad& q : d_quads ) edges.push_back( &q.o() );
+    return edges;
+  }
+
+
+  template <typename Core>
+  auto Shape<Core>::duals() const -> std::vector<const Dual*>
+  {
+    std::vector<const Dual*> edges;
+    for( const Quad& q : d_quads ) edges.push_back( &q.l() );
+    return edges;
+  }
+
+
+  template <typename Core>
+  auto Shape<Core>::duals() -> std::vector<Dual*>
+  {
+    std::vector<Dual*> edges;
+    for( Quad& q : d_quads ) edges.push_back( &q.l() );
+    return edges;
   }
 }
