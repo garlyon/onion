@@ -10,12 +10,21 @@
 struct VertData;
 struct FaceData;
 
+struct PrimEdge
+{
+  std::string peid;
+};
+
+
+struct DualEdge {};
+
 
 struct VertData
 {
   std::string vid;
 
   using Dual = FaceData;
+  using Edge = PrimEdge;
 };
 
 
@@ -24,6 +33,7 @@ struct FaceData
   std::string fid;
 
   using Dual = VertData;
+  using Edge = DualEdge;
 };
 
 
@@ -38,14 +48,20 @@ void Quad_NS::test()
   a.o().vid = "A";
   a.d().vid = "empty a.d";
   a.l().fid = "Inner";
+  a.peid = "eA";
+  a.sym().peid = "eA.sym";
   
   b.o().vid = "B";
   b.d().vid = "empty b.d";
   b.l().fid = "empty b.l & b.r";
+  b.peid = "eB";
+  b.sym().peid = "eB.sym";
   
   c.o().vid = "C";
   c.d().vid = "empty c.d";
   c.l().fid = "empty c.l & c.r";
+  c.peid = "eC";
+  c.sym().peid = "eC.sym";
   
   a.r();
 

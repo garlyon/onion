@@ -1,10 +1,13 @@
 #pragma once
 
 
+#include <memory>
+
+
 //
 //  class Leaf
 //  {
-//    Core* core  //  all lifs in a list refer to the same core
+//    Core* core  //  all leafs in a list refer to the same core
 //    Leaf* next
 //    Leaf* dual
 //  }
@@ -14,7 +17,7 @@
 namespace Quad_NS
 {
   template <typename Core>
-  class Leaf
+  class Leaf : public Core::Edge
   {
   public:
 
@@ -88,7 +91,7 @@ namespace Quad_NS
     void fuse( Leaf& );
 
     //  the only constructor, used by Quad
-    Leaf( Dual& i_dual ) : d_next( this ), d_dual( i_dual ), d_core( new Core ) {}
+    Leaf( Dual& i_dual ) : d_next( this ), d_dual( i_dual ), d_core( std::make_shared<Core>() ) {}
 
   private:
 
@@ -103,7 +106,9 @@ namespace Quad_NS
     const Core& core() const { return *d_core; }
     Core&       core()       { return *d_core; }
 
-    void core( Core* i_core ) { Leaf* f = this; do { f->d_core = i_core; } while( ( f = f->d_next ) != this ); }
+    using Ptr = std::shared_ptr<Core>;
+
+    void core( Ptr i_core ) { Leaf* f = this; do { f->d_core = i_core; } while( ( f = f->d_next ) != this ); }
 
     friend class Dual;
 
@@ -111,7 +116,7 @@ namespace Quad_NS
 
     Leaf*   d_next;
     Dual&   d_dual;
-    Core*   d_core;
+    Ptr     d_core;
 
     Leaf() = delete;
     Leaf( const Leaf& ) = delete;
@@ -130,14 +135,12 @@ namespace Quad_NS
     if( d_core == o.d_core )
     {
       //  detach this leaf from other leaf
-      Core* c = new Core;
       std::swap( d_next, o.d_next );
-      core( c );
+      core( std::make_shared<Core>() );
     }
     else
     {
       //  attach this leaf to other leaf
-      delete d_core;
       core( o.d_core );
       std::swap( d_next, o.d_next );
     }
