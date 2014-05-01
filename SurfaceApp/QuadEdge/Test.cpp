@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include "Vector.h"
+#include "VShape.h"
 
 
 struct VertData;
@@ -90,4 +91,8 @@ void Quad_NS::test()
   v = v ^ v;
 
   v.length();
+
+  Math_NS::Shape ms;
+
+  ms.make().o().lengthSqr();
 }
