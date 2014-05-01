@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Vector.h"
 #include "VShape.h"
+#include "Box.h"
 
 
 struct VertData;
@@ -95,4 +96,7 @@ void Quad_NS::test()
   Math_NS::Shape ms;
 
   ms.make().o().lengthSqr();
+
+  Math_NS::Box<char>();
+  Math_NS::Box<double>();
 }

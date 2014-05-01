@@ -6,9 +6,9 @@ namespace Math_NS
   template <typename T>
   struct Vector
   {
-    T x = 0;
-    T y = 0;
-    T z = 0;
+    T x{ 0 };
+    T y{ 0 };
+    T z{ 0 };
 
     Vector() = default;
     Vector( T x, T y, T z ) : x{ x }, y{ y }, z{ z } {}

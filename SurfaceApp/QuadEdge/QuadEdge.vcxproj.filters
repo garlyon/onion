@@ -13,14 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Interface">
-      <UniqueIdentifier>{13db5695-318e-4332-b3a0-8caa8bb9d05b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel">
-      <UniqueIdentifier>{8de1366e-69d3-4446-a1d7-7d0199c89dec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{10bf2c08-a043-4372-85ea-e79f57561eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quad">
+      <UniqueIdentifier>{8de1366e-69d3-4446-a1d7-7d0199c89dec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,13 +31,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Leaf.h">
-      <Filter>Kernel</Filter>
+      <Filter>Quad</Filter>
     </ClInclude>
     <ClInclude Include="Quad.h">
-      <Filter>Kernel</Filter>
+      <Filter>Quad</Filter>
     </ClInclude>
     <ClInclude Include="Splice.h">
-      <Filter>Kernel</Filter>
+      <Filter>Quad</Filter>
     </ClInclude>
     <ClInclude Include="Vector.h">
       <Filter>Math</Filter>
@@ -48,8 +45,11 @@
     <ClInclude Include="VShape.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Math</Filter>
+    </ClInclude>
     <ClInclude Include="Shape.h">
-      <Filter>Interface</Filter>
+      <Filter>Quad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
