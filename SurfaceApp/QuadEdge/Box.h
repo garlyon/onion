@@ -13,6 +13,8 @@ namespace Math_NS
     Vector<T> min{ std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max() };
     Vector<T> max{ std::numeric_limits<T>::lowest(), std::numeric_limits<T>::lowest(), std::numeric_limits<T>::lowest() };
 
+    using type = T;
+
     Box() = default;
     Box( const Vector<T>& min, const Vector<T>& max ) : min{ min }, max{ max } {}
 
@@ -21,6 +23,10 @@ namespace Math_NS
     Box& operator += ( const Vector<T>& );
     Box& operator += ( const Box& );
   };
+
+
+  using BoxI = Box<VectorI::type>;
+  using BoxD = Box<VectorD::type>;
 }
 
 

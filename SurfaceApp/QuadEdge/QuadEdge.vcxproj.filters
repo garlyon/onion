@@ -51,6 +51,9 @@
     <ClInclude Include="Shape.h">
       <Filter>Quad</Filter>
     </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuadEdgeAPI.cpp">
@@ -58,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

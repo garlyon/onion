@@ -10,6 +10,8 @@ namespace Math_NS
     T y{ 0 };
     T z{ 0 };
 
+    using type = T;
+
     Vector() = default;
     Vector( T x, T y, T z ) : x{ x }, y{ y }, z{ z } {}
 
@@ -22,6 +24,10 @@ namespace Math_NS
     const T length() const;
     const T lengthSqr() const;
   };
+
+
+  using VectorI = Vector<long long int>;
+  using VectorD = Vector<double>;
 
 
   template <typename T> const Vector<T> operator + ( const Vector<T>&, const Vector<T>& );

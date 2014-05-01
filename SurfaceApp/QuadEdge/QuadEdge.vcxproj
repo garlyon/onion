@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="VShape.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadEdgeAPI.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="QuadEdgeAPI.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>

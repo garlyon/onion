@@ -13,10 +13,7 @@ namespace Math_NS
   struct DualData;
 
 
-  using I = long long int;
-
-
-  struct VertData : public Vector<I>
+  struct VertData : public VectorI
   {
     using Dual = FaceData;
     using Edge = PrimData;
