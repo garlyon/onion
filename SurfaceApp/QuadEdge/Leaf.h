@@ -74,14 +74,14 @@ namespace Quad_NS
     const Vert& o() const { return core(); }
     Vert&       o()       { return core(); }
 
-    const Face& r() const { return rot().core(); }
-    Face&       r()       { return rot().core(); }
+    const Face& r() const { return dual().core(); }
+    Face&       r()       { return dual().core(); }
 
-    const Vert& d() const { return rot().rot().core(); }
-    Vert&       d()       { return rot().rot().core(); }
+    const Vert& d() const { return dual().dual().core(); }
+    Vert&       d()       { return dual().dual().core(); }
 
-    const Face& l() const { return rot().rot().rot().core(); }
-    Face&       l()       { return rot().rot().rot().core(); }
+    const Face& l() const { return dual().dual().dual().core(); }
+    Face&       l()       { return dual().dual().dual().core(); }
 
     //
     //  topology helper function, a half-splice
