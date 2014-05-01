@@ -28,6 +28,7 @@ namespace Math_NS
 
   using VectorI = Vector<long long int>;
   using VectorD = Vector<double>;
+  using VectorF = Vector<float>;
 
 
   template <typename T> const Vector<T> operator + ( const Vector<T>&, const Vector<T>& );
@@ -41,6 +42,9 @@ namespace Math_NS
   template <typename T> const T operator * ( const Vector<T>&, const Vector<T>& );
 
   template <typename T> const Vector<T> operator - ( const Vector<T>& );
+
+  template <typename T> const bool operator == ( const Vector<T>&, const Vector<T>& );
+  template <typename T> const bool operator != ( const Vector<T>&, const Vector<T>& );
 }
 
 
@@ -97,3 +101,6 @@ template <typename T> const Math_NS::Vector<T> Math_NS::operator / ( const Vecto
 template <typename T> const T Math_NS::operator * ( const Vector<T>& l, const Vector<T>& r ) { return l.x * r.x + l.y * r.y + l.z * r.z; }
 
 template <typename T> const Math_NS::Vector<T> Math_NS::operator - ( const Vector<T>& v ) { return { -v.x, -v.y, -v.z }; }
+
+template <typename T> const bool Math_NS::operator == ( const Vector<T>& l, const Vector<T>& r ) { return l.x == r.x && l.y == r.y && l.z == r.z; }
+template <typename T> const bool Math_NS::operator != ( const Vector<T>& l, const Vector<T>& r ) { return !( l == r ); }

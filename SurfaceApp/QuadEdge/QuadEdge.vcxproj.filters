@@ -19,6 +19,9 @@
     <Filter Include="Quad">
       <UniqueIdentifier>{8de1366e-69d3-4446-a1d7-7d0199c89dec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImportExport">
+      <UniqueIdentifier>{0aaf38c1-f3fe-48cf-9289-219c0c59c2a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -54,6 +57,9 @@
     <ClInclude Include="Grid.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="STL.h">
+      <Filter>ImportExport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuadEdgeAPI.cpp">
@@ -64,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="STL.cpp">
+      <Filter>ImportExport</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="Box.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="STL.h" />
     <ClInclude Include="VShape.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadEdgeAPI.h" />
@@ -91,6 +92,7 @@
   <ItemGroup>
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="QuadEdgeAPI.cpp" />
+    <ClCompile Include="STL.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

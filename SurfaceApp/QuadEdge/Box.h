@@ -3,6 +3,7 @@
 
 #include "Vector.h"
 #include <limits>
+#include <algorithm>
 
 
 namespace Math_NS
