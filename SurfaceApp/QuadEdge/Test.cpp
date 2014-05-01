@@ -5,6 +5,7 @@
 #include "Splice.h"
 #include <string>
 #include <iostream>
+#include "Vector.h"
 
 
 struct VertData;
@@ -81,4 +82,12 @@ void Quad_NS::test()
   cs.faces();
   cs.prims();
   cs.duals();
+
+  Math_NS::Vector<double> v;
+
+  v = ( v += v );
+  v = v + v;
+  v = v ^ v;
+
+  v.length();
 }

@@ -19,6 +19,9 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{8de1366e-69d3-4446-a1d7-7d0199c89dec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Impl">
+      <UniqueIdentifier>{10bf2c08-a043-4372-85ea-e79f57561eb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="Splice.h">
       <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
