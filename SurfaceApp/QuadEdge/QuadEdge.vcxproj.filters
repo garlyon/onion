@@ -51,9 +51,6 @@
     <ClInclude Include="Box.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>Quad</Filter>
-    </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -66,10 +63,13 @@
     <ClInclude Include="Types.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="VShape.h">
+    <ClInclude Include="Vertex.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Vertex.h">
+    <ClInclude Include="QShape.h">
+      <Filter>Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
       <Filter>Shape</Filter>
     </ClInclude>
   </ItemGroup>

@@ -83,11 +83,11 @@
     <ClInclude Include="STL.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Vertex.h" />
-    <ClInclude Include="VShape.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadEdgeAPI.h" />
     <ClInclude Include="Leaf.h" />
-    <ClInclude Include="Shape.h" />
+    <ClInclude Include="QShape.h" />
     <ClInclude Include="Splice.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Vector.h" />
