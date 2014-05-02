@@ -24,8 +24,8 @@ namespace Quad_NS
     using Prim = Leaf<Vert>;
     using Dual = Leaf<Face>;
         
-    //  single quad edge construction
-    Prim& make() { d_quads.emplace_back(); return d_quads.back().o(); }
+    Prim& makeEdge() { d_quads.emplace_back( Quad::Edge() ); return d_quads.back().o(); }
+    Prim& makeLoop() { d_quads.emplace_back( Quad::Loop() ); return d_quads.back().o(); }
 
     //  list of all primal nodes
     std::vector<const Prim*> verts() const;

@@ -16,11 +16,17 @@ namespace Quad_NS
     using Prim = Leaf<Vert>;
     using Dual = Leaf<Face>;
 
-    //  straight edge
-    Quad() : d_oVert( d_rFace ), d_dVert( d_lFace ), d_lFace( d_oVert ), d_rFace( d_dVert ) { d_lFace.fuse( d_rFace ); }
+    struct Edge {};
+    struct Loop {};
 
-    //  check if edge connected to other edges or not
-    bool unique() const;
+    //  straight edge
+    Quad( Edge ) : Quad() { d_lFace.fuse( d_rFace ); }
+
+    //  looped edge
+    Quad( Loop ) : Quad() { d_oVert.fuse( d_dVert ); }
+
+      //  check if edge connected to other edges or not
+      bool unique() const;
 
     //  direct accessors
 
@@ -33,6 +39,10 @@ namespace Quad_NS
     Prim& d() { return d_dVert; }
     Dual& l() { return d_lFace; }
     Dual& r() { return d_rFace; }
+
+  private:
+
+    Quad() : d_oVert( d_rFace ), d_dVert( d_lFace ), d_lFace( d_oVert ), d_rFace( d_dVert ) {}
 
   private:
 
