@@ -49,11 +49,11 @@ template <typename T> Math_NS::Box<T>& Math_NS::Box<T>::operator += ( const Vect
 
 template <typename T> Math_NS::Box<T>& Math_NS::Box<T>::operator += ( const Box<T>& b )
 {
-  min.x = std::min( min.x, box.min.x );
-  min.y = std::min( min.y, box.min.y );
-  min.z = std::min( min.z, box.min.z );
-  max.x = std::max( max.x, box.max.x );
-  max.y = std::max( max.y, box.max.y );
-  max.z = std::max( max.z, box.max.z );
+  min.x = std::min( min.x, b.min.x );
+  min.y = std::min( min.y, b.min.y );
+  min.z = std::min( min.z, b.min.z );
+  max.x = std::max( max.x, b.max.x );
+  max.y = std::max( max.y, b.max.y );
+  max.z = std::max( max.z, b.max.z );
   return *this;
 }

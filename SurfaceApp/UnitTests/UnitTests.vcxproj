@@ -91,6 +91,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="STL.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuadEdge\QuadEdge.vcxproj">
+      <Project>{6825e117-6394-4d5c-867e-cd7cf6401355}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

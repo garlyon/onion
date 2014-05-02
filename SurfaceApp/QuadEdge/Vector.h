@@ -35,7 +35,7 @@ namespace Math_NS
 
 
   using VectorI = Vector<I>;
-  using VectorD = Vector<double>;
+  using VectorD = Vector<D>;
 
 
   template <typename T> const Vector<T> operator + ( const Vector<T>&, const Vector<T>& );

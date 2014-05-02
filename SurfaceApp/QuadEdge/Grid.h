@@ -3,6 +3,7 @@
 
 #include "Box.h"
 #include "Rational.h"
+#include "QuadEdgeAPI.h"
 
 
 namespace Math_NS
@@ -10,7 +11,7 @@ namespace Math_NS
   using VectorR = Vector<R>;
 
 
-  class Grid
+  class QUADEDGE_API Grid
   {
     BoxD v; //  vector box
     BoxI i; //  index box
