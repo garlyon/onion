@@ -35,6 +35,9 @@ namespace Math_NS
   template <typename T> const Rational<T> operator / ( const Rational<T>&, const Rational<T>& );
 
   template <typename T> const Rational<T> operator - ( const Rational<T>& );
+
+  template <typename T> const bool operator == ( const Rational<T>&, const Rational<T>& );
+  template <typename T> const bool operator != ( const Rational<T>&, const Rational<T>& );
 }
 
 
@@ -87,3 +90,10 @@ template <typename T> const Math_NS::Rational<T> Math_NS::operator + ( const Rat
 template <typename T> const Math_NS::Rational<T> Math_NS::operator - ( const Rational<T>& l, const Rational<T>& r ) { return Rational<T>{ l } -= r; }
 template <typename T> const Math_NS::Rational<T> Math_NS::operator * ( const Rational<T>& l, const Rational<T>& r ) { return Rational<T>{ l } *= r; }
 template <typename T> const Math_NS::Rational<T> Math_NS::operator / ( const Rational<T>& l, const Rational<T>& r ) { return Rational<T>{ l } /= r; }
+
+
+template <typename T> const Math_NS::Rational<T> Math_NS::operator - ( const Rational<T>& v ) { return Rational<T>{ -v.n, v.d }; }
+
+
+template <typename T> const bool Math_NS::operator == ( const Rational<T>& l, const Rational<T>& r ) { return ( l.n == r.n && l.d == r.d ) || ( l.n * r.d == r.n * l.d ); }
+template <typename T> const bool Math_NS::operator != ( const Rational<T>& l, const Rational<T>& r ) { return !( l == r ); }

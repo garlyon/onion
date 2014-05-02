@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SurfaceApp", "SurfaceApp\SurfaceApp.vcxproj", "{8A766A8C-4FF8-4A1A-9D27-111C9176E6BC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuadEdge", "QuadEdge\QuadEdge.vcxproj", "{6825E117-6394-4D5C-867E-CD7CF6401355}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{5C923E9E-5B94-4BEF-879B-EED53056328E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,10 @@ Global
 		{6825E117-6394-4D5C-867E-CD7CF6401355}.Debug|Win32.Build.0 = Debug|Win32
 		{6825E117-6394-4D5C-867E-CD7CF6401355}.Release|Win32.ActiveCfg = Release|Win32
 		{6825E117-6394-4D5C-867E-CD7CF6401355}.Release|Win32.Build.0 = Release|Win32
+		{5C923E9E-5B94-4BEF-879B-EED53056328E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5C923E9E-5B94-4BEF-879B-EED53056328E}.Debug|Win32.Build.0 = Debug|Win32
+		{5C923E9E-5B94-4BEF-879B-EED53056328E}.Release|Win32.ActiveCfg = Release|Win32
+		{5C923E9E-5B94-4BEF-879B-EED53056328E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
