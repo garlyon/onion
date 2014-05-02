@@ -5,9 +5,9 @@ const Math_NS::VectorD Math_NS::Grid::operator() ( const VectorI& p ) const
 {
   return
   {
-    v.min.x + ( double( p.x - i.min.x ) / double( i.max.x - i.min.x ) ) * ( v.max.x - v.min.x ),
-    v.min.y + ( double( p.y - i.min.y ) / double( i.max.y - i.min.y ) ) * ( v.max.y - v.min.y ),
-    v.min.z + ( double( p.z - i.min.z ) / double( i.max.z - i.min.z ) ) * ( v.max.z - v.min.z )
+    v.min.x + ( static_cast<VectorD::type>( p.x - i.min.x ) / ( i.max.x - i.min.x ) ) * ( v.max.x - v.min.x ),
+    v.min.y + ( static_cast<VectorD::type>( p.y - i.min.y ) / ( i.max.y - i.min.y ) ) * ( v.max.y - v.min.y ),
+    v.min.z + ( static_cast<VectorD::type>( p.z - i.min.z ) / ( i.max.z - i.min.z ) ) * ( v.max.z - v.min.z )
   };
 }
 

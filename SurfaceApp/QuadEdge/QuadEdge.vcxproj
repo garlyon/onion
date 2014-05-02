@@ -79,7 +79,10 @@
   <ItemGroup>
     <ClInclude Include="Box.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="Rational.h" />
     <ClInclude Include="STL.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="VShape.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadEdgeAPI.h" />

@@ -2,10 +2,14 @@
 
 
 #include "Box.h"
+#include "Rational.h"
 
 
 namespace Math_NS
 {
+  using VectorR = Vector<R>;
+
+
   class Grid
   {
     BoxD v; //  vector box
@@ -13,9 +17,16 @@ namespace Math_NS
 
   public:
 
-    Grid( const BoxD& vectorVolume, const BoxI& indexVolume ) : v{ vectorVolume }, i{ indexVolume } {}
+    Grid( const BoxD& vectorVolume, const BoxI& indexVolume = BoxI{
+      VectorI{ std::numeric_limits<I>::lowest(), std::numeric_limits<I>::lowest(), std::numeric_limits<I>::lowest() },
+      VectorI{ std::numeric_limits<I>::max(), std::numeric_limits<I>::max(), std::numeric_limits<I>::max() }
+    } ) : v{ vectorVolume }, i{ indexVolume } {}
 
-    const VectorD operator() ( const VectorI& ) const;
+    //  vector to index
     const VectorI operator() ( const VectorD& ) const;
+
+    //  index to vector
+    const VectorD operator() ( const VectorI& ) const;
+    const VectorD operator() ( const VectorR& ) const;
   };
 }

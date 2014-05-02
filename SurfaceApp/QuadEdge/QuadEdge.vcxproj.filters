@@ -22,6 +22,9 @@
     <Filter Include="ImportExport">
       <UniqueIdentifier>{0aaf38c1-f3fe-48cf-9289-219c0c59c2a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shape">
+      <UniqueIdentifier>{e8e56a52-4064-4a33-95a5-359062b51e9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -45,9 +48,6 @@
     <ClInclude Include="Vector.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="VShape.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="Box.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -59,6 +59,18 @@
     </ClInclude>
     <ClInclude Include="STL.h">
       <Filter>ImportExport</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="VShape.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

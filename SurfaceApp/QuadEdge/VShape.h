@@ -1,11 +1,13 @@
 #pragma once
 
 
-#include "Vector.h"
 #include "Shape.h"
+#include "Vertex.h"
+#include "Vector.h"
+#include <memory>
 
 
-namespace Math_NS
+namespace Shape_NS
 {
   struct VertData;
   struct FaceData;
@@ -13,10 +15,12 @@ namespace Math_NS
   struct DualData;
 
 
-  struct VertData : public VectorI
+  struct VertData
   {
     using Dual = FaceData;
     using Edge = PrimData;
+
+    std::unique_ptr<IVertex> vert;
   };
 
 
@@ -27,17 +31,7 @@ namespace Math_NS
   };
 
 
-  struct PrimData
-  {
-    enum Type
-    {
-      Original,
-      Intersection,
-      Triangulation
-    };
-
-    Type type;
-  };
+  struct PrimData {};
 
 
   struct DualData {};

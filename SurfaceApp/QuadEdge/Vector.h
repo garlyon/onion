@@ -1,6 +1,9 @@
 #pragma once
 
 
+#include "Types.h"
+
+
 namespace Math_NS
 {
   template <typename T>
@@ -13,7 +16,12 @@ namespace Math_NS
     using type = T;
 
     Vector() = default;
+    Vector( const Vector& ) = default;
+
     Vector( T x, T y, T z ) : x{ x }, y{ y }, z{ z } {}
+
+    template <typename O>
+    explicit Vector( const Vector<O>& v ) : Vector( v.x, v.y, v.z ) {}
 
     Vector& operator += ( const Vector& );
     Vector& operator -= ( const Vector& );
@@ -26,9 +34,8 @@ namespace Math_NS
   };
 
 
-  using VectorI = Vector<long long int>;
+  using VectorI = Vector<I>;
   using VectorD = Vector<double>;
-  using VectorF = Vector<float>;
 
 
   template <typename T> const Vector<T> operator + ( const Vector<T>&, const Vector<T>& );
@@ -90,13 +97,13 @@ template <typename T> Math_NS::Vector<T>& Math_NS::Vector<T>::operator /= ( cons
 template <typename T> const T Math_NS::Vector<T>::lengthSqr() const { return (*this) * (*this); }
 template <typename T> const T Math_NS::Vector<T>::length() const { return std::sqrt( lengthSqr() ); }
 
-template <typename T> const Math_NS::Vector<T> Math_NS::operator + ( const Vector<T>& l, const Vector<T>& r ) { return Vector<T>( l ) += r; }
-template <typename T> const Math_NS::Vector<T> Math_NS::operator - ( const Vector<T>& l, const Vector<T>& r ) { return Vector<T>( l ) -= r; }
+template <typename T> const Math_NS::Vector<T> Math_NS::operator + ( const Vector<T>& l, const Vector<T>& r ) { return Vector<T>{ l } += r; }
+template <typename T> const Math_NS::Vector<T> Math_NS::operator - ( const Vector<T>& l, const Vector<T>& r ) { return Vector<T>{ l } -= r; }
 template <typename T> const Math_NS::Vector<T> Math_NS::operator ^ ( const Vector<T>& l, const Vector<T>& r ) { return { l.y * r.z - l.z * r.y, l.z * r.x - l.x * r.z, l.x * r.y - l.y * r.x }; }
 
-template <typename T> const Math_NS::Vector<T> Math_NS::operator * ( const Vector<T>& v, const T t ) { return Vector<T>( v ) *= t; }
-template <typename T> const Math_NS::Vector<T> Math_NS::operator * ( const T t, const Vector<T>& v ) { return Vector<T>( v ) *= t; }
-template <typename T> const Math_NS::Vector<T> Math_NS::operator / ( const Vector<T>& v, const T t ) { return Vector<T>( v ) /= t; }
+template <typename T> const Math_NS::Vector<T> Math_NS::operator * ( const Vector<T>& v, const T t ) { return Vector<T>{ v } *= t; }
+template <typename T> const Math_NS::Vector<T> Math_NS::operator * ( const T t, const Vector<T>& v ) { return Vector<T>{ v } *= t; }
+template <typename T> const Math_NS::Vector<T> Math_NS::operator / ( const Vector<T>& v, const T t ) { return Vector<T>{ v } /= t; }
 
 template <typename T> const T Math_NS::operator * ( const Vector<T>& l, const Vector<T>& r ) { return l.x * r.x + l.y * r.y + l.z * r.z; }
 

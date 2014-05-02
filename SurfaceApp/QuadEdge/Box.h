@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "Types.h"
 #include "Vector.h"
 #include <limits>
 #include <algorithm>
@@ -26,8 +27,8 @@ namespace Math_NS
   };
 
 
-  using BoxI = Box<VectorI::type>;
-  using BoxD = Box<VectorD::type>;
+  using BoxI = Box<I>;
+  using BoxD = Box<D>;
 }
 
 
