@@ -21,7 +21,7 @@ namespace Math_NS
     Vector( T x, T y, T z ) : x{ x }, y{ y }, z{ z } {}
 
     template <typename O>
-    explicit Vector( const Vector<O>& v ) : Vector( v.x, v.y, v.z ) {}
+    explicit Vector( const Vector<O>& v ) : Vector{ v.x, v.y, v.z } {}
 
     Vector& operator += ( const Vector& );
     Vector& operator -= ( const Vector& );

@@ -4,6 +4,10 @@
 #include "Splice.h"
 
 
+static_assert( sizeof( float ) == 4, "float size should be 4 bytes" );
+static_assert( sizeof( uint32_t ) == 4, "uint32_t size should be 4 bytes" );
+
+
 Math_NS::BoxD STL_NS::box( const char* i_fileName )
 {
   std::ifstream file( i_fileName, std::ifstream::binary );
