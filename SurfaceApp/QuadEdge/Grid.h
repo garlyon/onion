@@ -2,15 +2,11 @@
 
 
 #include "Box.h"
-#include "Rational.h"
 #include "QuadEdgeAPI.h"
 
 
 namespace Math_NS
 {
-  using VectorR = Vector<R>;
-
-
   class QUADEDGE_API Grid
   {
     BoxD v; //  vector box
@@ -28,6 +24,5 @@ namespace Math_NS
 
     //  index to vector
     const VectorD operator() ( const VectorI& ) const;
-    const VectorD operator() ( const VectorR& ) const;
   };
 }
