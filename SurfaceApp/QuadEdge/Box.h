@@ -29,6 +29,12 @@ namespace Math_NS
 
   using BoxI = Box<I>;
   using BoxD = Box<D>;
+
+
+  template <typename T> const bool operator == ( const Box<T>&, const Box<T>& );
+  template <typename T> const bool operator != ( const Box<T>&, const Box<T>& );
+
+  template <typename T> const Box<T> operator + ( const Box<T>&, const Box<T>& );
 }
 
 
@@ -57,3 +63,9 @@ template <typename T> Math_NS::Box<T>& Math_NS::Box<T>::operator += ( const Box<
   max.z = std::max( max.z, b.max.z );
   return *this;
 }
+
+
+template <typename T> const bool Math_NS::operator == ( const Box<T>& l, const Box<T>& r ) { return l.min == r.min && l.max == r.max; }
+template <typename T> const bool Math_NS::operator != ( const Box<T>& l, const Box<T>& r ) { return !( l == r ); }
+
+template <typename T> const Math_NS::Box<T> Math_NS::operator + ( const Box<T>& l, const Box<T>& r ) { return Box<T>{ l } += r; }

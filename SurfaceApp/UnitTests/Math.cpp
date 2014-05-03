@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "..\QuadEdge\Vector.h"
+#include "..\QuadEdge\Box.h"
 #include "..\QuadEdge\Rational.h"
 
 
@@ -8,6 +9,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 
 using V = Math_NS::VectorI;
+using B = Math_NS::BoxI;
 using R = Math_NS::R;
 
 
@@ -16,10 +18,14 @@ template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString
   return std::to_wstring( v );
 }
 
-
 template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString( const V& v )
 {
   return L"( " + std::to_wstring( v.x ) + L", " + std::to_wstring( v.y ) + L", " + std::to_wstring( v.z ) + L" )";
+}
+
+template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString( const B& v )
+{
+  return ToString( v.min ) + L" ~ " + ToString( v.max );
 }
 
 template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString( const R& v )
@@ -30,11 +36,11 @@ template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString
 
 namespace UnitTests
 {
-  TEST_CLASS( Vector )
+  TEST_CLASS( Math )
   {
   public:
 
-    TEST_METHOD( Operatons )
+    TEST_METHOD( Vector )
     {
       Assert::AreEqual( V{ 1, 2, 3 }, V{ 1, 2, 3 }, L"Equality" );
       Assert::AreEqual( V{ 7, 7, 7 }, V{ 1, 2, 3 } + V{ 6, 5, 4 }, L"Sum" );
@@ -46,14 +52,18 @@ namespace UnitTests
       Assert::AreEqual( V{}, V{ 1, 2, 3 } + -V{ 1, 2, 3 }, L"Negation" );
       Assert::AreEqual( 25LL, V{ 3, 0, 4 }.lengthSqr(), L"LengthSqr" );
     }
-  };
 
+    TEST_METHOD( Box )
+    {
+      Assert::IsTrue( B{}.empty(), L"Empty" );
+      Assert::IsFalse( B{ V{}, V{} }.empty(), L"NonEmpty Point" );
+      Assert::IsFalse( B{ V{}, V{ 1, 1, 1 } }.empty(), L"NonEmpty Volume" );
+      Assert::AreEqual( B{ V{ 0, 0, 0 }, V{ 3, 3, 3 } }, B{ V{ 0, 0, 0 }, V{ 3, 3, 3 } } + B{ V{ 1, 1, 1 }, V{ 2, 2, 2 } }, L"Internal Sum" );
+      Assert::AreEqual( B{ V{ 0, 0, 0 }, V{ 3, 3, 3 } }, B{ V{ 0, 0, 0 }, V{ 2, 2, 2 } } + B{ V{ 1, 1, 1 }, V{ 3, 3, 3 } }, L"Overlaping Sum" );
+      Assert::AreEqual( B{ V{ 0, 0, 0 }, V{ 3, 3, 3 } }, B{ V{ 0, 0, 0 }, V{ 1, 1, 1 } } + B{ V{ 2, 2, 2 }, V{ 3, 3, 3 } }, L"External Sum" );
+    }
 
-  TEST_CLASS( Rational )
-  {
-  public:
-
-    TEST_METHOD( Direct )
+    TEST_METHOD( RationalDirect )
     {
       Assert::AreEqual( R{ 1, 2 }, R{ 2, 4 }, L"Equality" );
 
@@ -68,7 +78,7 @@ namespace UnitTests
       Assert::IsFalse( R{ 2, 3 } != R{ 2, 3 }, L"Non Equality" );
     }
 
-    TEST_METHOD( Simplified )
+    TEST_METHOD( RationalSmart )
     {
       auto same = []( const R& l, const R& r ) -> bool { return l.n == r.n && l.d == r.d; };
 
