@@ -1,29 +1,26 @@
 #include "Test.h"
-#include "Shape.h"
-#include "STL.h"
+#include "Long.h"
+#include <random>
 
 
 void Quad_NS::test()
 {
-  Shape_NS::Shape s;
+  using namespace Math_NS;
 
-  Math_NS::Grid g = STL_NS::box( "../test.stl" );
+  std::default_random_engine e;
 
-  STL_NS::read( "../test.stl", s, g );
+  for( size_t i = 0; i < 100; ++i )
+  {
+    Long64 a( e(), e() );
+    Long64 b( e(), e() );
+    uint64_t A = reinterpret_cast<const uint64_t&>( a );
+    uint64_t B = reinterpret_cast<const uint64_t&>( b );
+    
+    Long64 c = ( a *= b );
+    uint64_t C = reinterpret_cast<const uint64_t&>( c );
 
-  auto verts = s.verts();
-  auto faces = s.faces();
-  auto edges = s.prims();
-  auto duals = s.duals();
+    uint64_t r = A * B;
 
-  STL_NS::write( "../out.stl", s, g );
-
-  Shape_NS::Shape s2;
-
-  STL_NS::read( "../out.stl", s2, g );
-
-  auto verts2 = s2.verts();
-  auto faces2 = s2.faces();
-  auto edges2 = s2.prims();
-  auto duals2 = s2.duals();
+    bool x = ( C == r );
+  }
 }

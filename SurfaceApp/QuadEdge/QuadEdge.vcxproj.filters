@@ -72,6 +72,9 @@
     <ClInclude Include="Shape.h">
       <Filter>Shape</Filter>
     </ClInclude>
+    <ClInclude Include="Long.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuadEdgeAPI.cpp">
