@@ -13,9 +13,12 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using L = Math_NS::Long64;
 
 
+const uint64_t toi64( const L& x ){ return reinterpret_cast<const uint64_t&>( x ); };
+
+
 template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString( const L& v )
 {
-  return L"{ " + std::to_wstring( v.hi.u ) + L", " + std::to_wstring( v.lo.u ) + L" }";
+  return std::to_wstring( toi64( v ) );
 }
 
 
@@ -37,6 +40,7 @@ namespace UnitTests
       Assert::AreEqual( L{ 4, 6 }, L{ 1, 2 } +L{ 3, 4 }, L"Sum" );
       Assert::AreEqual( L{ 1, 2 }, L{ 4, 6 } -L{ 3, 4 }, L"Difference" );
 
+      Assert::AreEqual( L{ 0, 0 }, L{ 0, 1 } *L{ 0, 0 }, L"Product0" );
       Assert::AreEqual( L{ 0, 6 }, L{ 0, 2 } *L{ 0, 3 }, L"Product1" );
       Assert::AreEqual( L{ 1, 0 }, L{ 1, 0 } *L{ 0, 1 }, L"Product2" );
       Assert::AreEqual( L{ 1, 0 }, L{ 0, 1 } *L{ 1, 0 }, L"Product3" );
@@ -48,8 +52,6 @@ namespace UnitTests
 
     TEST_METHOD( RandomSums )
     {
-      auto toi64 = []( L x ) -> uint64_t { return reinterpret_cast<const uint64_t&>( x ); };
-
       std::default_random_engine e;
 
       for( size_t i = 0; i < 2000; ++i )
@@ -65,8 +67,6 @@ namespace UnitTests
 
     TEST_METHOD( RandomProds )
     {
-      auto toi64 = []( L x ) -> uint64_t { return reinterpret_cast<const uint64_t&>( x ); };
-
       std::default_random_engine e;
 
       for( size_t i = 0; i < 2000; ++i )
@@ -75,6 +75,20 @@ namespace UnitTests
         const L B{ e(), e() };
 
         Assert::AreEqual( toi64( A ) * toi64( B ), toi64( A * B ), ( L"Random Product #" + std::to_wstring( i ) ).c_str() );
+      }
+    }
+
+
+    TEST_METHOD( RandomMults )
+    {
+      std::default_random_engine e;
+
+      for( size_t i = 0; i < 2000; ++i )
+      {
+        const L A{ e(), e() };
+        const L B{ e(), e() };
+
+        Assert::AreEqual( A * B, reinterpret_cast<const L&>( Math_NS::mul( A, B ) ), ( L"Random Product #" + std::to_wstring( i ) ).c_str() );
       }
     }
   };
