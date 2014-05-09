@@ -80,6 +80,7 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Long.h" />
+    <ClInclude Include="LongIO.h" />
     <ClInclude Include="Rational.h" />
     <ClInclude Include="STL.h" />
     <ClInclude Include="Types.h" />

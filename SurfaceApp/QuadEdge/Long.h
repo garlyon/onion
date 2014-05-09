@@ -2,6 +2,7 @@
 
 
 #include <cstdint>
+#include <iosfwd>
 
 
 namespace Math_NS
@@ -24,13 +25,6 @@ namespace Math_NS
     const bool operator == ( const Long& v ) const { return lo == v.lo && hi == v.hi; }
     const bool operator <  ( const Long& v ) const { return hi < v.hi || ( hi == v.hi && lo < v.lo ); }
 
-  private:
-
-    friend class Long<Long>;
-
-    template <typename X>
-    friend const Long<Long<X>> mul( const Long<X>&, const Long<X>& );
-
     using C = uint32_t;
 
     //  add carry flag; return carry flag if overflow still happens
@@ -49,9 +43,15 @@ namespace Math_NS
   template <> class Long<uint16_t>;
 
 
-  using Long32 = Long<uint16_t>;
-  using Long64 = Long<Long32>;
-  using Long128 = Long<Long64>;
+  using Long32    = Long<uint16_t>;
+  using Long64    = Long<Long32>;
+  using Long128   = Long<Long64>;
+  using Long256   = Long<Long128>;
+  using Long512   = Long<Long256>;
+  using Long1024  = Long<Long512>;
+  using Long2048  = Long<Long1024>;
+  using Long4096  = Long<Long2048>;
+  using Long8192  = Long<Long4096>;
 
 
   template <typename T> const Long<T> operator + ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) += b; }
@@ -83,15 +83,6 @@ public:
 
   const bool operator == ( const Long& v ) const { return u == v.u; }
   const bool operator <  ( const Long& v ) const { return u < v.u; }
-
-  operator const uint32_t () const { return u; }
-
-private:
-
-  friend class Long<Long>;
-
-  template <typename X>
-  friend const Long<Long<X>> mul( const Long<X>&, const Long<X>& );
 
   using C = uint32_t;
 
@@ -193,7 +184,7 @@ const Math_NS::Long<Math_NS::Long<T>> Math_NS::mul( const Long<T>& a, const Long
 template <>
 const Math_NS::Long64 Math_NS::mul( const Long32& a, const Long32& b )
 {
-  const uint64_t c = static_cast<uint64_t>( static_cast<uint32_t>( a ) ) * static_cast<uint64_t>( static_cast<uint32_t>( b ) );
+  const uint64_t c = static_cast<uint64_t>( a.u ) * static_cast<uint64_t>( b.u );
   return Long64( static_cast<uint32_t>( c >> 32 ), static_cast<uint32_t>( c ) );
 }
 

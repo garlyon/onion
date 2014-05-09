@@ -4,7 +4,11 @@
 #include "..\QuadEdge\Box.h"
 #include "..\QuadEdge\Rational.h"
 #include "..\QuadEdge\Long.h"
+#include "..\QuadEdge\LongIO.h"
 #include <random>
+#include <sstream>
+#include <fstream>
+#include <algorithm>
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -26,6 +30,8 @@ namespace UnitTests
 {
   TEST_CLASS( Long )
   {
+    static const size_t nrand = 2000;
+
   public:
 
     TEST_METHOD( Simple )
@@ -54,7 +60,7 @@ namespace UnitTests
     {
       std::default_random_engine e;
 
-      for( size_t i = 0; i < 2000; ++i )
+      for( size_t i = 0; i < nrand; ++i )
       {
         const L A{ e(), e() };
         const L B{ e(), e() };
@@ -69,7 +75,7 @@ namespace UnitTests
     {
       std::default_random_engine e;
 
-      for( size_t i = 0; i < 2000; ++i )
+      for( size_t i = 0; i < nrand; ++i )
       {
         const L A{ e(), e() };
         const L B{ e(), e() };
@@ -83,13 +89,47 @@ namespace UnitTests
     {
       std::default_random_engine e;
 
-      for( size_t i = 0; i < 2000; ++i )
+      for( size_t i = 0; i < nrand; ++i )
       {
         const L A{ e(), e() };
         const L B{ e(), e() };
 
         Assert::AreEqual( A * B, reinterpret_cast<const L&>( Math_NS::mul( A, B ) ), ( L"Random Product #" + std::to_wstring( i ) ).c_str() );
       }
+    }
+
+
+    TEST_METHOD( Factorial )
+    {
+      std::wstring exp;
+      {
+        std::wifstream file( L"../sum n! from 1 to 900.txt" );
+        Assert::IsTrue( (bool)file, L"Can't open file with result" );
+        file >> exp;
+      }
+
+      using X = Math_NS::Long8192;
+      
+      X f = 1;
+      X s = 0;
+
+      for( size_t i = 1; i <= 900; ++i )
+      {
+        f *= i;
+        s += f;
+      }
+
+      std::wostringstream buf;
+      buf << s;
+
+      std::wstring sbuf = buf.str();
+     
+      std::wstring res;
+
+      //  remove leading zeroes and spaces
+      std::copy_if( sbuf.begin() + sbuf.find_first_not_of( L" 0" ), sbuf.end(), std::back_inserter( res ), []( wchar_t c ) { return c != L' '; } );
+
+      Assert::AreEqual( exp, res, L"Sum i!, i = 1 to 900" );
     }
   };
 }
