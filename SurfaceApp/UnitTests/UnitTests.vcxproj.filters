@@ -32,5 +32,8 @@
     <ClCompile Include="STL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Long.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

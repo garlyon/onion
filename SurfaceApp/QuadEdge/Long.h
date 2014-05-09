@@ -75,11 +75,11 @@ public:
   using X = Long<Long<uint16_t>>;
 
   //  add carry flag; return carry flag if overflow still happens
-  C carry( C c ) { return ( u += c ) < u; }
+  C carry( C c ) { uint32_t t{ u }; return ( u += c ) < t; }
   //  addition with carry; returns 0 or 1
-  C adc( const Long& v, C c ) { return ( u += v.u + c ) < u; }
+  C adc( const Long& v, C c ) { uint32_t t{ u }; return ( u += v.u + c ) < t; }
   //  subtraction with carry; returns 0 or 1
-  C sbc( const Long& v, C c ) { return ( u -= v.u + c ) > u; }
+  C sbc( const Long& v, C c ) { uint32_t t{ u }; return ( u -= v.u + c ) > t; }
   //  multiplication, results in doubled precision
   static X mul( const Long& a, const Long& b )
   {
@@ -166,12 +166,13 @@ typename Math_NS::Long<T>::X Math_NS::Long<T>::mul( const Long& a, const Long& b
 
   //  a.hi * b.lo + a.lo * a.hi = ( a.hi + a.lo ) * ( b.hi + b.lo ) - a.hi * b.hi - a.lo * b.lo
   //  ( a.hi + a.lo ) * ( b.hi + b.lo ) - a.hi * b.hi - a.lo * b.lo = ss + ( ca + cb + cc ) * M^2
+  //  , ca + cb + cc = c
   
-  //  a.hi * b.lo + a.lo * a.hi < 2 M^2
+  //  a.hi * b.lo + a.lo * a.hi < 2 M^2, 0 <= c <= 1
 
-  c = ll.hi.adc( ss.lo, c );
-  c = hh.lo.adc( ss.hi, c );
-  hh.hi.carry( c );
+  ca = ll.hi.adc( ss.lo, 0 );
+  cb = hh.lo.adc( ss.hi, c + ca );
+  hh.hi.carry( cb );
   
   return X( hh, ll );
 }
