@@ -17,9 +17,9 @@ namespace Math_NS
     Long( const Long& ) = default;
     Long& operator = ( const Long& ) = default;
 
-    Long& operator += ( const Long& );
-    Long& operator -= ( const Long& );
-    Long& operator *= ( const Long& );
+    Long& operator += ( const Long& v ) { adc( v, 0 ); return *this; }
+    Long& operator -= ( const Long& v ) { sbc( v, 0 ); return *this; }
+    Long& operator *= ( const Long& v ) { mll( v ); return *this; }
 
     using C = uint32_t;
     using X = Long<Long<T>>;
@@ -30,6 +30,8 @@ namespace Math_NS
     C adc( const Long&, C );
     //  subtraction with carry; returns 0 or 1
     C sbc( const Long&, C );
+    //  multiplication, returns only lower part
+    void mll( const Long& );
     //  multiplication, results in doubled precision
     static X mul( const Long&, const Long& );
 
@@ -45,12 +47,12 @@ namespace Math_NS
   using Long128 = Long<Long64>;
 
 
-  template <typename T> const Long<T> operator + ( const Long<T>&, const Long<T>& );
-  template <typename T> const Long<T> operator - ( const Long<T>&, const Long<T>& );
-  template <typename T> const Long<T> operator * ( const Long<T>&, const Long<T>& );
+  template <typename T> const Long<T> operator + ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) += b; }
+  template <typename T> const Long<T> operator - ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) -= b; }
+  template <typename T> const Long<T> operator * ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) *= b; }
 
-  template <typename T> const bool operator == ( const Long<T>&, const Long<T>& );
-  template <typename T> const bool operator <  ( const Long<T>&, const Long<T>& );
+  template <typename T> const bool operator == ( const Long<T>& a, const Long<T>& b ) { return a.lo == b.lo && a.hi == b.hi; }
+  template <typename T> const bool operator <  ( const Long<T>& a, const Long<T>& b ) { return a.hi < b.hi || ( a.hi == b.hi && a.lo < b.lo ); }
 }
 
 
@@ -98,23 +100,6 @@ template <> const bool Math_NS::operator <  ( const Long32& a, const Long32& b )
 ///////////////////////////////////////////////////////////////////////////////
 
 
-template <typename T> Math_NS::Long<T>& Math_NS::Long<T>::operator += ( const Long& v ) { adc( v, 0 ); return *this; }
-template <typename T> Math_NS::Long<T>& Math_NS::Long<T>::operator -= ( const Long& v ) { sbc( v, 0 ); return *this; }
-template <typename T> Math_NS::Long<T>& Math_NS::Long<T>::operator *= ( const Long& v ) { return *this = mul( *this, v ).lo; }
-
-
-template <typename T> const Math_NS::Long<T> Math_NS::operator + ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) += b; }
-template <typename T> const Math_NS::Long<T> Math_NS::operator - ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) -= b; }
-template <typename T> const Math_NS::Long<T> Math_NS::operator * ( const Long<T>& a, const Long<T>& b ) { return Long<T>::mul( a, b ).lo; }
-
-
-template <typename T> const bool Math_NS::operator == ( const Long<T>& a, const Long<T>& b ) { return a.lo == b.lo && a.hi == b.hi; }
-template <typename T> const bool Math_NS::operator <  ( const Long<T>& a, const Long<T>& b ) { return a.hi < b.hi || ( a.hi == b.hi && a.lo < b.lo ); }
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
 template <typename T>
 typename Math_NS::Long<T>::C Math_NS::Long<T>::carry( C c )
 {
@@ -133,6 +118,15 @@ template <typename T>
 typename Math_NS::Long<T>::C Math_NS::Long<T>::sbc( const Long& v, C c )
 {
   return hi.sbc( v.hi, lo.sbc( v.lo, c ) );
+}
+
+
+template <typename T>
+void Math_NS::Long<T>::mll( const Long& v )
+{
+  T p = ( hi * v.lo + lo * v.hi );
+  *this = T::mul( lo, v.lo );
+  hi += p;
 }
 
 
