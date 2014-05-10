@@ -108,7 +108,7 @@ namespace UnitTests
         file >> exp;
       }
 
-      using X = Math_NS::Long8192;
+      using X = Math_NS::LongType<8192>::type;
       
       X f = 1;
       X s = 0;

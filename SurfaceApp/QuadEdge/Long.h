@@ -2,7 +2,6 @@
 
 
 #include <cstdint>
-#include <iosfwd>
 
 
 namespace Math_NS
@@ -43,15 +42,19 @@ namespace Math_NS
   template <> class Long<uint16_t>;
 
 
-  using Long32    = Long<uint16_t>;
-  using Long64    = Long<Long32>;
-  using Long128   = Long<Long64>;
-  using Long256   = Long<Long128>;
-  using Long512   = Long<Long256>;
-  using Long1024  = Long<Long512>;
-  using Long2048  = Long<Long1024>;
-  using Long4096  = Long<Long2048>;
-  using Long8192  = Long<Long4096>;
+  template <size_t nbits>
+  struct LongType
+  {
+    static_assert( nbits > 32, "Invalid nbits for Long type" );
+    using type = Long<typename LongType<nbits / 2>::type>;
+  };
+
+  template <> struct LongType<32> { using type = Long<uint16_t>; };
+
+
+  using Long32    = LongType<32>::type;
+  using Long64    = LongType<64>::type;
+  using Long128   = LongType<128>::type;
 
 
   template <typename T> const Long<T> operator + ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) += b; }
