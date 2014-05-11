@@ -66,7 +66,10 @@ namespace UnitTests
     {
       using L = Math_NS::Long128;
 
-      Assert::AreEqual( L{}, ( L{} - 1 ) + L{ 0, 1 }, L"Sum with Overflow" );
+      const uint32_t m = std::numeric_limits<uint32_t>::max();
+
+      Assert::AreEqual( L{ { m, m }, { m, m } }, L{} -1, L"Overflow" );
+      Assert::AreEqual( L{}, ( L{} - 1 ) + L{ 1 }, L"Sum with Overflow" );
     }
 
     TEST_METHOD( RandomSums )
