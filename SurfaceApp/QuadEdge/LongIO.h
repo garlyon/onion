@@ -8,11 +8,11 @@
 
 namespace Math_NS
 {
-  template <typename T> std::ostream& operator << ( std::ostream& s, const Long<T>& v ) { return s << v.hi << ' ' << v.lo; }
-  template <typename T> std::istream& operator >> ( std::istream& s,       Long<T>& v ) { return s >> v.hi >> v.lo; }
+  template <size_t n> std::ostream& operator << ( std::ostream& s, const Long<n>& v ) { return s << v.hi << ' ' << v.lo; }
+  template <size_t n> std::istream& operator >> ( std::istream& s,       Long<n>& v ) { return s >> v.hi >> v.lo; }
 
-  template <typename T> std::wostream& operator << ( std::wostream& s, const Long<T>& v ) { return s << v.hi << L' ' << v.lo; }
-  template <typename T> std::wistream& operator >> ( std::wistream& s, Long<T>& v )       { return s >> v.hi >> v.lo; }
+  template <size_t n> std::wostream& operator << ( std::wostream& s, const Long<n>& v ) { return s << v.hi << L' ' << v.lo; }
+  template <size_t n> std::wistream& operator >> ( std::wistream& s, Long<n>& v )       { return s >> v.hi >> v.lo; }
 }
 
 

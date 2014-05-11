@@ -6,12 +6,13 @@
 
 namespace Math_NS
 {
-  template <typename T>
-  class Long
+  template <size_t n>
+  struct Long
   {
-  public:
+    using H = Long<n/2>;
+    using L = Long<n/2>;
 
-    Long( T hi, T lo ) : hi{ hi }, lo{ lo } {}
+    Long( H hi, L lo ) : hi{ hi }, lo{ lo } {}
     Long( uint32_t u = 0 ) : lo{ u } {}
 
     Long( const Long& ) = default;
@@ -24,7 +25,7 @@ namespace Math_NS
     const bool operator == ( const Long& v ) const { return lo == v.lo && hi == v.hi; }
     const bool operator <  ( const Long& v ) const { return hi < v.hi || ( hi == v.hi && lo < v.lo ); }
 
-    using C = uint32_t;
+    using C = typename Long<n/2>::C;
 
     //  add carry flag; return carry flag if overflow still happens
     C carry( C );
@@ -35,35 +36,26 @@ namespace Math_NS
     //  multiplication, returns only lower part
     void mll( const Long& );
 
-    T lo, hi;
+    L lo;
+    H hi;
   };
 
 
-  template <> class Long<uint16_t>;
+  template <> struct Long<32>;
 
 
-  template <size_t nbits>
-  struct LongType
-  {
-    static_assert( nbits > 32, "Invalid nbits for Long type" );
-    using type = Long<typename LongType<nbits / 2>::type>;
-  };
-
-  template <> struct LongType<32> { using type = Long<uint16_t>; };
+  using Long32    = Long<32>;
+  using Long64    = Long<64>;
+  using Long128   = Long<128>;
 
 
-  using Long32    = LongType<32>::type;
-  using Long64    = LongType<64>::type;
-  using Long128   = LongType<128>::type;
-
-
-  template <typename T> const Long<T> operator + ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) += b; }
-  template <typename T> const Long<T> operator - ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) -= b; }
-  template <typename T> const Long<T> operator * ( const Long<T>& a, const Long<T>& b ) { return Long<T>( a ) *= b; }
+  template <size_t n> const Long<n> operator + ( const Long<n>& a, const Long<n>& b ) { return Long<n>( a ) += b; }
+  template <size_t n> const Long<n> operator - ( const Long<n>& a, const Long<n>& b ) { return Long<n>( a ) -= b; }
+  template <size_t n> const Long<n> operator * ( const Long<n>& a, const Long<n>& b ) { return Long<n>( a ) *= b; }
 
 
   //  multiplication, results in doubled precision
-  template <typename T> const Long<Long<T>> mul( const Long<T>&, const Long<T>& );
+  template <size_t n> const Long<2*n> mul( const Long<n>&, const Long<n>& );
 }
 
 
@@ -71,10 +63,8 @@ namespace Math_NS
 
 
 template <>
-class Math_NS::Long<uint16_t>
+struct Math_NS::Long<32>
 {
-public:
-
   Long( uint32_t u = 0 ) : u{ u } {}
     
   Long( const Long& ) = default;
@@ -105,31 +95,31 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 
-template <typename T>
-typename Math_NS::Long<T>::C Math_NS::Long<T>::carry( C c )
+template <size_t n>
+typename Math_NS::Long<n>::C Math_NS::Long<n>::carry( C c )
 {
   return hi.carry( lo.carry( c ) );
 }
 
 
-template <typename T>
-typename Math_NS::Long<T>::C Math_NS::Long<T>::adc( const Long& v, C c )
+template <size_t n>
+typename Math_NS::Long<n>::C Math_NS::Long<n>::adc( const Long& v, C c )
 {
   return hi.adc( v.hi, lo.adc( v.lo, c ) );
 }
 
 
-template <typename T>
-typename Math_NS::Long<T>::C Math_NS::Long<T>::sbc( const Long& v, C c )
+template <size_t n>
+typename Math_NS::Long<n>::C Math_NS::Long<n>::sbc( const Long& v, C c )
 {
   return hi.sbc( v.hi, lo.sbc( v.lo, c ) );
 }
 
 
-template <typename T>
-void Math_NS::Long<T>::mll( const Long& v )
+template <size_t n>
+void Math_NS::Long<n>::mll( const Long& v )
 {
-  T p = ( hi * v.lo + lo * v.hi );
+  auto p = ( hi * v.lo + lo * v.hi );
   *this = mul( lo, v.lo );
   hi += p;
 }
@@ -138,10 +128,10 @@ void Math_NS::Long<T>::mll( const Long& v )
 ///////////////////////////////////////////////////////////////////////////////
 
 
-template <typename T>
-const Math_NS::Long<Math_NS::Long<T>> Math_NS::mul( const Long<T>& a, const Long<T>& b )
+template <size_t n>
+const Math_NS::Long<2*n> Math_NS::mul( const Long<n>& a, const Long<n>& b )
 {
-  using L = Long<T>;
+  using L = Long<n>;
   using C = typename L::C;
 
   //  a = a.hi * M + a.lo, max a = M^2 - 1
@@ -150,10 +140,10 @@ const Math_NS::Long<Math_NS::Long<T>> Math_NS::mul( const Long<T>& a, const Long
   L hh = mul( a.hi, b.hi );  //  max hh = M^2 - 2M + 1
   L ll = mul( a.lo, b.lo );  //  max ll = M^2 - 2M + 1
 
-  T sa = a.hi;
+  auto sa = a.hi;
   C ca = sa.adc( a.lo, 0 );  //  a.hi + a.lo = sa + ca * M, max sa = M - 1
 
-  T sb = b.hi;
+  auto sb = b.hi;
   C cb = sb.adc( b.lo, 0 );  //  b.hi + b.lo = sb + cb * M, max sb = M - 1
 
   C c = ca & cb;
@@ -179,7 +169,7 @@ const Math_NS::Long<Math_NS::Long<T>> Math_NS::mul( const Long<T>& a, const Long
   cb = hh.lo.adc( ss.hi, c + ca );
   hh.hi.carry( cb );
   
-  return Long<L>( hh, ll );
+  return Long<2*n>( hh, ll );
 }
 
 
