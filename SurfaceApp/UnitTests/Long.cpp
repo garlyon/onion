@@ -68,8 +68,14 @@ namespace UnitTests
 
       const uint32_t m = std::numeric_limits<uint32_t>::max();
 
-      Assert::AreEqual( L{ { m, m }, { m, m } }, L{} -1, L"Overflow" );
-      Assert::AreEqual( L{}, ( L{} - 1 ) + L{ 1 }, L"Sum with Overflow" );
+      Assert::AreEqual( L{ 0 }, L{ { m, m }, { m, m } } + 1, L"( max + 1 ) == 0" );
+      Assert::AreEqual( L{ 0 }, 1 + L{ { m, m }, { m, m } }, L"( 1 + max ) == 0" );
+
+      Assert::AreEqual( L{ { m, m }, { m, m } }, L{ 0 } - 1, L"( 0 - 1 ) == max" );
+      Assert::AreEqual( L{ 1 }, 0 - L{ { m, m }, { m, m } }, L"( 0 - max ) == 1" );
+
+      Assert::AreEqual( L{ { 1, 1 }, { 1, 0 } }, L{ { m, m }, { m, m } } + L{ { 1, 1 }, { 1, 1 } }, L"carry test max + 1" );
+      Assert::AreEqual( L{ { 1, 1 }, { 1, 0 } }, L{ { 1, 1 }, { 1, 1 } } + L{ { m, m }, { m, m } }, L"carry test 1 + max" );
     }
 
     TEST_METHOD( RandomSums )
