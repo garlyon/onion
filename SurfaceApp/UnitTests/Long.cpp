@@ -26,6 +26,12 @@ template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString
 }
 
 
+template <> std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString( const Math_NS::Long128& v )
+{
+  return std::to_wstring( toi64( v.hi ) ) + L'.' + std::to_wstring( toi64( v.lo ) );
+}
+
+
 namespace UnitTests
 {
   TEST_CLASS( Long )
@@ -54,6 +60,13 @@ namespace UnitTests
 
       Assert::AreEqual( L{ 1, 0 }, L{ 0, 1 << 16 } * L{ 0, 1 << 16 }, L"Product5" );
       Assert::AreEqual( L{ 1, 0 }, L{ 1 << 16, 1 << 16 } * L{ 1 << 16, 1 << 16 }, L"Product6" );
+    }
+
+    TEST_METHOD( Carry )
+    {
+      using L = Math_NS::Long128;
+
+      Assert::AreEqual( L{}, ( L{} - 1 ) + L{ 0, 1 }, L"Sum with Overflow" );
     }
 
     TEST_METHOD( RandomSums )

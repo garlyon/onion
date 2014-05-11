@@ -22,8 +22,12 @@ namespace Math_NS
     Long& operator -= ( const Long& v ) { sbc( v, 0 ); return *this; }
     Long& operator *= ( const Long& v ) { mll( v ); return *this; }
 
-    const bool operator == ( const Long& v ) const { return lo == v.lo && hi == v.hi; }
-    const bool operator <  ( const Long& v ) const { return hi < v.hi || ( hi == v.hi && lo < v.lo ); }
+    friend const Long operator + ( const Long& a, const Long& b ) { return Long( a ) += b; }
+    friend const Long operator - ( const Long& a, const Long& b ) { return Long( a ) -= b; }
+    friend const Long operator * ( const Long& a, const Long& b ) { return Long( a ) *= b; }
+
+    friend const bool operator == ( const Long& a, const Long& b ) { return a.lo == b.lo && a.hi == b.hi; }
+    friend const bool operator <  ( const Long& a, const Long& b ) { return a.hi < b.hi || ( a.hi == b.hi && a.lo < b.lo ); }
 
     using C = typename Long<n/2>::C;
 
@@ -49,11 +53,6 @@ namespace Math_NS
   using Long128   = Long<128>;
 
 
-  template <size_t n> const Long<n> operator + ( const Long<n>& a, const Long<n>& b ) { return Long<n>( a ) += b; }
-  template <size_t n> const Long<n> operator - ( const Long<n>& a, const Long<n>& b ) { return Long<n>( a ) -= b; }
-  template <size_t n> const Long<n> operator * ( const Long<n>& a, const Long<n>& b ) { return Long<n>( a ) *= b; }
-
-
   //  multiplication, results in doubled precision
   template <size_t n> const Long<2*n> mul( const Long<n>&, const Long<n>& );
 }
@@ -74,17 +73,21 @@ struct Math_NS::Long<32>
   Long& operator -= ( const Long& v ) { u -= v.u; return *this; }
   Long& operator *= ( const Long& v ) { u *= v.u; return *this; }
 
-  const bool operator == ( const Long& v ) const { return u == v.u; }
-  const bool operator <  ( const Long& v ) const { return u < v.u; }
+  friend const Long operator + ( const Long& a, const Long& b ) { return Long( a ) += b; }
+  friend const Long operator - ( const Long& a, const Long& b ) { return Long( a ) -= b; }
+  friend const Long operator * ( const Long& a, const Long& b ) { return Long( a ) *= b; }
+
+  friend const bool operator == ( const Long& a, const Long& b ) { return a.u == b.u; }
+  friend const bool operator <  ( const Long& a, const Long& b ) { return a.u < b.u; }
 
   using C = uint32_t;
 
   //  add carry flag; return carry flag if overflow still happens
-  C carry( C c ) { uint32_t t{ u }; return ( u += c ) < t; }
+  C carry( C c ) { auto t = u; return ( u += c ) < t; }
   //  addition with carry; returns 0 or 1
-  C adc( const Long& v, C c ) { uint32_t t{ u }; return ( u += v.u + c ) < t; }
+  C adc( const Long& v, C c ) { auto t = u; return ( u += v.u + c ) < t; }
   //  subtraction with carry; returns 0 or 1
-  C sbc( const Long& v, C c ) { uint32_t t{ u }; return ( u -= v.u + c ) > t; }
+  C sbc( const Long& v, C c ) { auto t = u; return ( u -= v.u + c ) > t; }
   //  multiplication, returns only lower part
   void mll( const Long& v ) { u *= v.u; }
     
